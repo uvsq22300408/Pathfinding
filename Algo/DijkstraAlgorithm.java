@@ -76,7 +76,6 @@ public class DijkstraAlgorithm {
         return coord;
     }
 
-    @SuppressWarnings("unused")
     private Point getPoint(int index) {
         return new Point(index/colonnes, index % colonnes);
     }
