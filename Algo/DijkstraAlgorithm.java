@@ -34,12 +34,12 @@ public class DijkstraAlgorithm {
         for (int i = -1; i < 2; i++) {
             int xVoisin = coord[0] + i;
 
-            if ((xVoisin >= 0) && (xVoisin < lignes - 1)) {
-
+            if ((xVoisin >= 0) && (xVoisin <= lignes - 1)) {
+                
                 for (int j = -1; j < 2; j++) {
                     int yVoisin = coord[1] + j;
 
-                    if ((yVoisin >= 0) && (yVoisin < colonnes - 1)) {
+                    if ((yVoisin >= 0) && (yVoisin <= colonnes - 1)) {
                     
                         if ((coord[0] != xVoisin) || (coord[1] != yVoisin)) {
                             int[] coordVoisin = {xVoisin, yVoisin};
@@ -58,7 +58,7 @@ public class DijkstraAlgorithm {
 
     private int minDistIndex(ArrayList<Double> d, ArrayList<Boolean> P) {
         int indexMin = -1;
-        double distMin = 1000;
+        double distMin = lignes*colonnes*10000;
 
         for (int i = 0; i < colonnes * lignes; i++) {
             if (!P.get(i)) {
@@ -135,8 +135,10 @@ public class DijkstraAlgorithm {
                                                          pred.add(null);
                                                          P.add(false);} }
         d.set(indexDepart, 0.0);
+        int i = 0;
 
         while (!P.get(indexArrivee)) {
+            i++;
 
             int a = minDistIndex(d, P);
             if (a < 0) {
@@ -158,7 +160,6 @@ public class DijkstraAlgorithm {
        
         ArrayList<Point> chemin = cheminPoints(pred);
         System.out.println("Distance de (" + pointDepart.x + ", " + pointDepart.y + ") à (" + pointArrivee.x + ", " + pointArrivee.y + ") : " + d.get(indexArrivee));
-        System.out.println(chemin);
         return chemin;
     }
 }
