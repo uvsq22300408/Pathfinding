@@ -135,10 +135,8 @@ public class DijkstraAlgorithm {
                                                          pred.add(null);
                                                          P.add(false);} }
         d.set(indexDepart, 0.0);
-        int i = 0;
 
         while (!P.get(indexArrivee)) {
-            i++;
 
             int a = minDistIndex(d, P);
             if (a < 0) {
