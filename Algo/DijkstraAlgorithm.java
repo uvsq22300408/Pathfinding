@@ -112,19 +112,21 @@ public class DijkstraAlgorithm {
         grille.set(indexArrivee, 2);
     }
 
-    private ArrayList<Integer> cheminPoints(ArrayList<Integer> pred) {
-        ArrayList<Integer> chemin = new ArrayList<>();
+    private ArrayList<Point> cheminPoints(ArrayList<Integer> pred) {
+        ArrayList<Point> chemin = new ArrayList<>();
         Integer indexCourrant = indexArrivee;
+        Point pointCourrant = pointArrivee;
         while (indexCourrant != indexDepart) {
-            chemin.add(indexCourrant);
             indexCourrant = pred.get(indexCourrant);
+            pointCourrant = getPoint(indexCourrant);
+            chemin.add(pointCourrant);
         }
-        chemin.add(indexDepart);
+        chemin.remove(chemin.size() - 1);
         return chemin;
 
     }
 
-    public ArrayList<Integer> calculChemin() {
+    public ArrayList<Point> calculChemin() {
         initialise();
 
         ArrayList<Boolean> P = new ArrayList<>();
@@ -154,16 +156,10 @@ public class DijkstraAlgorithm {
                 }
             }
         }
-        
-        ArrayList<Integer> vraiPred = new ArrayList<>();
-        for (Integer e : pred) {
-            if (e != null && e > 0) {
-                Integer elt = e;
-                vraiPred.add(elt);
-            } else {
-                vraiPred.add(-1);
-            }
-        }
-        return cheminPoints(pred);
+       
+        ArrayList<Point> chemin = cheminPoints(pred);
+        System.out.println("Distance de (" + pointDepart.x + ", " + pointDepart.y + ") à (" + pointArrivee.x + ", " + pointArrivee.y + ") : " + d.get(indexArrivee));
+        System.out.println(chemin);
+        return chemin;
     }
 }

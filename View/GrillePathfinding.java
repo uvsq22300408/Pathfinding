@@ -141,9 +141,15 @@ public class GrillePathfinding extends JFrame {
 
         if (classeAlgorithme == "algo.DijkstraAlgorithm") {
             DijkstraAlgorithm algo = new Algo.DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES);
-            System.out.println(algo.calculChemin());
+            afficheChemin(algo.calculChemin());
         }
 
+    }
+
+    private void afficheChemin(ArrayList<Point> chemin) {
+        for (Point p : chemin) {
+            boutonsGrille[p.x][p.y].setBackground(Color.GRAY);
+        }
     }
 
     /**
