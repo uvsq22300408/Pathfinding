@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-import Algo.*;
+import Algo.DijkstraAlgorithm;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -138,6 +138,12 @@ public class GrillePathfinding extends JFrame {
                 }
             }
         }
+
+        if (classeAlgorithme == "algo.DijkstraAlgorithm") {
+            DijkstraAlgorithm algo = new Algo.DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES);
+            System.out.println(algo.calculChemin());
+        }
+
     }
 
     /**
