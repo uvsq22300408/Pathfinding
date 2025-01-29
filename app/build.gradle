@@ -23,6 +23,7 @@ dependencies {
 
     // This dependency is used by the application.
     implementation libs.guava
+    implementation 'uk.co.electronstudio.jaylib:jaylib:5.5.+'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -35,6 +36,7 @@ java {
 application {
     // Define the main class for the application.
     mainClass = 'org.example.view.GrillePathfinding'
+
 }
 
 tasks.named('test') {
