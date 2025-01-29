@@ -1,38 +1,49 @@
 package org.example.view;
-import javax.swing.*;
 
-import org.example.algo.DijkstraAlgorithm;
-
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GrillePathfinding extends JFrame {
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import org.example.algo.DijkstraAlgorithm;
+
+public class GrillePathfinding extends javax.swing.JFrame {
     private static final int LIGNES = 20; // Nombre de lignes
     private static final int COLONNES = 20; // Nombre de colonnes
-    private final JButton[][] boutonsGrille = new JButton[LIGNES][COLONNES]; // Boutons de la grille
+    private final javax.swing.JButton[][] boutonsGrille = new javax.swing.JButton[LIGNES][COLONNES]; // Boutons de la grille
     private final List<Point> pointsSelectionnes = new ArrayList<>(); // Points sélectionnés (départ/arrivée)
 
     public GrillePathfinding() {
         setTitle("Grille de Pathfinding");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Créer la grille
-        JPanel panneauGrille = new JPanel(new GridLayout(LIGNES, COLONNES, 0, 0));
+        javax.swing.JPanel panneauGrille = new javax.swing.JPanel(new GridLayout(LIGNES, COLONNES, 0, 0));
         for (int i = 0; i < LIGNES; i++) {
             for (int j = 0; j < COLONNES; j++) {
-                JButton bouton = creerBoutonGrille(i, j);
+                javax.swing.JButton bouton = creerBoutonGrille(i, j);
                 boutonsGrille[i][j] = bouton;
                 panneauGrille.add(bouton);
             }
         }
 
         // Panneau des contrôles
-        JPanel panneauControle = creerPanneauControle();
+        javax.swing.JPanel panneauControle = creerPanneauControle();
 
         // Ajouter les panneaux à la fenêtre
         add(panneauGrille, BorderLayout.CENTER);
