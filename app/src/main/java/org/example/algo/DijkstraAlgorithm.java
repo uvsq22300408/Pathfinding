@@ -157,7 +157,7 @@ public class DijkstraAlgorithm {
         }
        
         ArrayList<Point> chemin = cheminPoints(pred);
-        System.out.println("Distance de (" + pointDepart.x + ", " + pointDepart.y + ") à (" + pointArrivee.x + ", " + pointArrivee.y + ") : " + d.get(indexArrivee));
+        System.out.println("Distance de (" + pointDepart.x + ", " + pointDepart.y + ") vers (" + pointArrivee.x + ", " + pointArrivee.y + ") : " + d.get(indexArrivee));
         return chemin;
     }
 }
