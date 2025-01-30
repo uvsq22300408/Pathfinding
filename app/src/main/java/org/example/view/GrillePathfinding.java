@@ -153,7 +153,13 @@ public class GrillePathfinding extends javax.swing.JFrame {
 
         if (classeAlgorithme == "algo.DijkstraAlgorithm") {
             DijkstraAlgorithm algo = new org.example.algo.DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES);
-            afficheChemin(algo.calculChemin());
+            long startTime = System.nanoTime();
+            ArrayList<Point> chemin = algo.calculChemin();
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
+            System.out.println("Execution time in nanoseconds: " + duration);
+
+            afficheChemin(chemin);
         }
 
     }
