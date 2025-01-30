@@ -3,6 +3,9 @@ import javax.swing.*;
 
 import org.example.algo.DijkstraAlgorithm;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -167,5 +170,31 @@ public class GrillePathfinding extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(GrillePathfinding::new);
+
+        
+        try {
+            // Commande à exécuter
+            String executable = "./src/main/java/org/example/algo/Dijkstra/DijkstraAlgo";
+
+            ProcessBuilder pb = new ProcessBuilder(executable, "0", "0", "3", "3");
+
+            // Lancer le processus
+            Process process = pb.start();
+
+            // Lire la sortie du programme
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("Path trouvé: " + line);
+            }
+
+            // Attendre la fin du processus
+            int exitCode = process.waitFor();
+            System.out.println("Code de sortie : " + exitCode);
+
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
