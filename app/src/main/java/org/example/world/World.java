@@ -9,13 +9,26 @@ public class World {
         width = h;
         height = w;
         regiontype = regtype;
+        tailleReg = _tailleRegion;
         start = _start;
         destination = _destination;
-        tailleReg = _tailleRegion;
-        passThrough = new int[w * h];
-        for (int ix = 0; ix < w * h; ix++) {
+        Region startReg, destinationRegion;
+        switch(regtype) {
+            case OCTILE: {
+                startReg = new Region.Octile(start.x, start.y, tailleReg);
+                destinationRegion = new Region.Octile(destination.x, destination.y, tailleReg);
+            }
+            default: {
+                startReg = new Region.Octile(start.x, start.y, tailleReg);
+                destinationRegion = new Region.Octile(destination.x, destination.y, tailleReg);
+            }
+        }
+        passThrough = new int[(w / _tailleRegion) * (h / _tailleRegion)];
+        for (int ix = 0; ix < (w / _tailleRegion) * (h / _tailleRegion); ix++) {
             passThrough[ix] = 0;
         }
+        passThrough[(startReg.x / tailleReg) * (h / tailleReg) + (startReg.y / tailleReg)] = InnerWorld.START;
+        passThrough[(destinationRegion.x / tailleReg) * (h / tailleReg) + (destinationRegion.y / tailleReg)] = InnerWorld.DESTINATION;
     }
 
     public enum ERegionType {
@@ -24,20 +37,30 @@ public class World {
         CONTINUOUS
     }
 
-    public abstract class Region {
-        public class Octile {
-
+    public static class Region {
+        public Region(float x, float y, int tailleReg) {
+            int regionStartX = Math.round(x) / tailleReg;
+            int regionStartY = Math.round(y) / tailleReg;
+            this.x = regionStartX * tailleReg;
+            this.y = regionStartY * tailleReg;
+        }
+        public static class Octile extends Region {
+            public Octile(float x, float y, int tailleReg) {
+                super(x, y, tailleReg);
+            }
         }
 
-        public class Triangle {
+        public static class Triangle {
+            public Triangle() {
 
+            }
         }
 
         public int x;
         public int y;
     }
 
-    public class Obstacle {
+    public static class Obstacle {
         public Obstacle(float _x,  float _y, float r) {
             x = _x;
             y = _y;
@@ -49,7 +72,7 @@ public class World {
         public float radius;
     }
 
-    public class Point {
+    public static class Point {
         public Point(float _x, float _y) {
             x = _x;
             y = _y;
@@ -64,7 +87,12 @@ public class World {
         obstacles.add(ob);
     }
 
-    public static int OBSTACLE = -100;
+    public static class InnerWorld {
+        public static int OBSTACLE = -100;
+        public static int START = -80;
+        public static int DESTINATION = -90;
+    }
+    
 
     public int tailleReg;
     public int height;
