@@ -1,4 +1,4 @@
-package org.example.algo;
+package org.example.Algo;
 
 import java.lang.Math;
 import java.util.ArrayList;

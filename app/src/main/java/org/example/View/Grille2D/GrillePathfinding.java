@@ -1,7 +1,8 @@
-package org.example.view;
+package org.example.View.Grille2D;
+
 import javax.swing.*;
 
-import org.example.algo.DijkstraAlgorithm;
+import org.example.Algo.DijkstraAlgorithm;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -18,6 +19,7 @@ public class GrillePathfinding extends JFrame {
 
     public GrillePathfinding() {
         setTitle("Grille de Pathfinding");
+        setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -141,7 +143,7 @@ public class GrillePathfinding extends JFrame {
         }
 
         if (classeAlgorithme == "algo.DijkstraAlgorithm") {
-            DijkstraAlgorithm algo = new org.example.algo.DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES);
+            DijkstraAlgorithm algo = new org.example.Algo.DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES);
             long startTime = System.nanoTime();
             ArrayList<Point> chemin = algo.calculChemin();
             long endTime = System.nanoTime();
