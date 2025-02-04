@@ -2,7 +2,7 @@ package org.example.view;
 
 import javax.swing.*;
 
-import org.example.Algo.DijkstraAlgorithm;
+import org.example.algo.DijkstraAlgorithm;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -143,7 +143,7 @@ public class GrillePathfinding extends JFrame {
         }
 
         if (classeAlgorithme == "algo.DijkstraAlgorithm") {
-            DijkstraAlgorithm algo = new org.example.Algo.DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES);
+            DijkstraAlgorithm algo = new org.example.algo.DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES);
             long startTime = System.nanoTime();
             ArrayList<Point> chemin = algo.calculChemin();
             long endTime = System.nanoTime();

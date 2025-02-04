@@ -1,7 +1,7 @@
 package org.example.view;
 
-import org.example.Algo.NavMesh;
-import org.example.Algo.Triangle;
+import org.example.algo.NavMesh;
+import org.example.algo.Triangle;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
