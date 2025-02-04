@@ -1,4 +1,4 @@
-package org.example.Algo;
+package org.example.algo;
 
 public class AStarAlgorithm {
     

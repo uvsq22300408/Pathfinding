@@ -1,7 +1,6 @@
 package org.example;
 
-import org.example.View.Grille2D.*;
-import org.example.View.SansGrille2D.*;
+import org.example.view.*;
 import javax.swing.*;
 
 public class Main {

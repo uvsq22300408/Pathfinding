@@ -1,4 +1,4 @@
-package org.example.View.SansGrille2D;
+package org.example.view;
 
 import java.awt.*;
 import java.util.ArrayList;

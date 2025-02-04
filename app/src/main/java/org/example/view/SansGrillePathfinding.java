@@ -1,4 +1,4 @@
-package org.example.View.SansGrille2D;
+package org.example.view;
 
 import org.example.Algo.NavMesh;
 import org.example.Algo.Triangle;
