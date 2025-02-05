@@ -7,5 +7,4 @@ import java.awt.Point;
 
 public interface Algorithme {
     ArrayList<Point> calculChemin();
-    void setObstacles(Set<Point> obstacles);
 }

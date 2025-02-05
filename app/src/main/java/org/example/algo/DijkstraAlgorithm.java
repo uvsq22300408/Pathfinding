@@ -3,21 +3,20 @@ package org.example.algo;
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.awt.*;
 
 public class DijkstraAlgorithm implements Algorithme { 
     
     int colonnes;
     int lignes;
-    Set<Point> obstacles;
+    List<Point> obstacles;
     int indexDepart;
     int indexArrivee;
     Point pointDepart;
     Point pointArrivee;
     ArrayList<Integer> grille = new ArrayList<>();
 
-    public DijkstraAlgorithm(List<Point> pointsSelectionnes, Set<Point> obstacles, int lignes, int colonnes) {
+    public DijkstraAlgorithm(List<Point> pointsSelectionnes, List<Point> obstacles, int lignes, int colonnes) {
         this.obstacles = obstacles;
         this.colonnes = colonnes;
         this.lignes = lignes;
@@ -25,11 +24,6 @@ public class DijkstraAlgorithm implements Algorithme {
         this.pointArrivee = pointsSelectionnes.get(1);
         this.indexDepart = getIndex(pointsSelectionnes.get(0));
         this.indexArrivee = getIndex(pointsSelectionnes.get(1));
-    }
-
-    @Override
-    public void setObstacles(Set<Point> obstacles) {
-        this.obstacles = obstacles;
     }
 
     private ArrayList<Integer> getIndexVoisins(int sommet) {
