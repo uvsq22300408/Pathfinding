@@ -80,7 +80,7 @@ public class GrillePathfinding extends JFrame {
         JButton boutonAstar = new JButton("Lancer A*");
 
         boutonDijkstra.addActionListener(e -> executerAlgorithme(new DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
-        boutonAstar.addActionListener(e -> executerAlgorithme(new AStarAlgorithm()));
+        boutonAstar.addActionListener(e -> executerAlgorithme(new AStarAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
 
         boutonAstar.setPreferredSize(new Dimension(100, 40));
         boutonDijkstra.setPreferredSize(new Dimension(100, 40));
@@ -130,6 +130,16 @@ public class GrillePathfinding extends JFrame {
      * Exécute l'algorithme de pathfinding sélectionné.
      */
     private void executerAlgorithme(Algorithme algo) {
+
+        // Retirer le chemin précédent
+        for (int i = 0; i < LIGNES; i++) {
+            for (int j = 0; j < COLONNES; j++) {
+                if (boutonsGrille[i][j].getBackground() == Color.GRAY) {
+                    boutonsGrille[i][j].setBackground(Color.WHITE);
+                }
+            }
+        }
+
         if (pointsSelectionnes.size() % 2 != 0) {
             JOptionPane.showMessageDialog(this, "Veuillez sélectionner un nombre pair de points (départ et arrivée) !");
             return;
