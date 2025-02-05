@@ -2,6 +2,8 @@ package org.example.view;
 
 import javax.swing.*;
 
+import org.example.algo.AStarAlgorithm;
+import org.example.algo.Algorithme;
 import org.example.algo.DijkstraAlgorithm;
 
 import java.awt.*;
@@ -75,8 +77,17 @@ public class GrillePathfinding extends JFrame {
         JPanel panneau = new JPanel(new GridLayout(5, 1, 5, 5));
         panneau.setPreferredSize(new Dimension(150, 0));
 
-        ajouterBoutonControle(panneau, "Lancer A*", "algo.AStarAlgorithm");
-        ajouterBoutonControle(panneau, "Lancer Dijkstra", "algo.DijkstraAlgorithm");
+        JButton boutonDijkstra = new JButton("Lancer Dijkstra");
+        JButton boutonAstar = new JButton("Lancer A*");
+
+        boutonDijkstra.addActionListener(e -> executerAlgorithme(new DijkstraAlgorithm(pointsSelectionnes, null, LIGNES, COLONNES)));
+        boutonAstar.addActionListener(e -> executerAlgorithme(new AStarAlgorithm()));
+
+        boutonAstar.setPreferredSize(new Dimension(100, 40));
+        boutonDijkstra.setPreferredSize(new Dimension(100, 40));
+
+        panneau.add(boutonDijkstra);
+        panneau.add(boutonAstar);
 
         JButton boutonReinitialiser = new JButton("Réinitialiser la grille");
         boutonReinitialiser.setPreferredSize(new Dimension(100, 40));
@@ -84,16 +95,6 @@ public class GrillePathfinding extends JFrame {
         panneau.add(boutonReinitialiser);
 
         return panneau;
-    }
-
-    /**
-     * Ajoute un bouton pour exécuter un algorithme spécifique.
-     */
-    private void ajouterBoutonControle(JPanel panneau, String label, String classeAlgorithme) {
-        JButton bouton = new JButton(label);
-        bouton.setPreferredSize(new Dimension(100, 40));
-        bouton.addActionListener(e -> executerAlgorithme(classeAlgorithme));
-        panneau.add(bouton);
     }
 
     /**
@@ -127,7 +128,7 @@ public class GrillePathfinding extends JFrame {
     /**
      * Exécute l'algorithme de pathfinding sélectionné.
      */
-    private void executerAlgorithme(String classeAlgorithme) {
+    private void executerAlgorithme(Algorithme algo) {
         if (pointsSelectionnes.size() % 2 != 0) {
             JOptionPane.showMessageDialog(this, "Veuillez sélectionner un nombre pair de points (départ et arrivée) !");
             return;
@@ -142,17 +143,15 @@ public class GrillePathfinding extends JFrame {
             }
         }
 
-        if (classeAlgorithme == "algo.DijkstraAlgorithm") {
-            DijkstraAlgorithm algo = new org.example.algo.DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES);
-            long startTime = System.nanoTime();
-            ArrayList<Point> chemin = algo.calculChemin();
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime);
-            System.out.println("Execution time in nanoseconds: " + duration);
+        algo.setObstacles(obstacles);
 
-            afficheChemin(chemin);
-        }
+        long startTime = System.nanoTime();
+        ArrayList<Point> chemin = algo.calculChemin();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("Execution time in nanoseconds: " + duration);
 
+        afficheChemin(chemin);
     }
 
     private void afficheChemin(ArrayList<Point> chemin) {

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.awt.*;
 
-public class DijkstraAlgorithm { 
+public class DijkstraAlgorithm implements Algorithme { 
     
     int colonnes;
     int lignes;
@@ -25,6 +25,11 @@ public class DijkstraAlgorithm {
         this.pointArrivee = pointsSelectionnes.get(1);
         this.indexDepart = getIndex(pointsSelectionnes.get(0));
         this.indexArrivee = getIndex(pointsSelectionnes.get(1));
+    }
+
+    @Override
+    public void setObstacles(Set<Point> obstacles) {
+        this.obstacles = obstacles;
     }
 
     private ArrayList<Integer> getIndexVoisins(int sommet) {
@@ -125,6 +130,7 @@ public class DijkstraAlgorithm {
 
     }
 
+    @Override
     public ArrayList<Point> calculChemin() {
         initialise();
 
