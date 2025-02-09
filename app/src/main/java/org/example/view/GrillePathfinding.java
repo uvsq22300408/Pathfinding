@@ -2,17 +2,14 @@ package org.example.view;
 
 import javax.swing.*;
 
-import org.example.algo.AStarAlgorithm;
-import org.example.algo.Algorithme;
-import org.example.algo.DijkstraAlgorithm;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.algo.*;
+import org.example.algo.Astar.AstarExecuter;
+import org.example.algo.Dijkstra.DijkstraExecuter;
 
 public class GrillePathfinding extends JFrame {
     private static final int LIGNES = 20; // Nombre de lignes
@@ -82,8 +79,8 @@ public class GrillePathfinding extends JFrame {
         JButton boutonDijkstra = new JButton("Lancer Dijkstra");
         JButton boutonAstar = new JButton("Lancer A*");
 
-        boutonDijkstra.addActionListener(e -> executerAlgorithme(new DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
-        boutonAstar.addActionListener(e -> executerAlgorithme(new AStarAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
+        boutonDijkstra.addActionListener(e -> executerAlgorithme(new DijkstraExecuter(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
+        boutonAstar.addActionListener(e -> executerAlgorithme(new AstarExecuter(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
 
         boutonAstar.setPreferredSize(new Dimension(100, 40));
         boutonDijkstra.setPreferredSize(new Dimension(100, 40));
@@ -132,7 +129,7 @@ public class GrillePathfinding extends JFrame {
     /**
      * Exécute l'algorithme de pathfinding sélectionné.
      */
-    private void executerAlgorithme(Algorithme algo) {
+    private void executerAlgorithme(AlgorithmExecuter algo) {
 
         // Retirer le chemin précédent
         for (int i = 0; i < LIGNES; i++) {
@@ -148,7 +145,7 @@ public class GrillePathfinding extends JFrame {
             return;
         }
         long startTime = System.nanoTime();
-        ArrayList<Point> chemin = algo.calculChemin();
+        ArrayList<Point> chemin = algo.executeAlgo();
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         System.out.println("Execution time in nanoseconds: " + duration);
@@ -182,31 +179,5 @@ public class GrillePathfinding extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(GrillePathfinding::new);
-
-        
-        try {
-            // Commande à exécuter
-            String executable = "./src/main/java/org/example/algo/Dijkstra/DijkstraAlgo";
-
-            ProcessBuilder pb = new ProcessBuilder(executable, "0", "0", "3", "3");
-
-            // Lancer le processus
-            Process process = pb.start();
-
-            // Lire la sortie du programme
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println("Path trouvé: " + line);
-            }
-
-            // Attendre la fin du processus
-            int exitCode = process.waitFor();
-            System.out.println("Code de sortie : " + exitCode);
-
-
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
