@@ -1,40 +1,40 @@
 package org.example.algo;
 
 import java.awt.Point;
-import java.util.ArrayList;
+import java.awt.Polygon;
 import java.util.List;
 
 public class Triangle {
-    public Point[] vertices;
-    Point center;
-    List<Triangle> neighbors;
-    double cost;
+    public Point a, b, c;
 
     public Triangle(Point a, Point b, Point c) {
-        this.vertices = new Point[]{a, b, c};
-        this.center = new Point((a.x + b.x + c.x) / 3, (a.y + b.y + c.y) / 3);
-        this.neighbors = new ArrayList<>();
+        this.a = a;
+        this.b = b;
+        this.c = c;
     }
 
     public boolean contains(Point p) {
-        return isPointInTriangle(p, vertices[0], vertices[1], vertices[2]);
+        Polygon poly = new Polygon(
+            new int[]{a.x, b.x, c.x}, 
+            new int[]{a.y, b.y, c.y}, 
+            3
+        );
+        return poly.contains(p);
     }
 
-    public void addNeighbor(Triangle neighbor) {
-        if (!neighbors.contains(neighbor)) {
-            neighbors.add(neighbor);
+    public boolean intersectsObstacle(List<Polygon> obstacles) {
+        for (Polygon obs : obstacles) {
+            if (obs.intersects(a.x, a.y, b.x - a.x, b.y - a.y) ||
+                obs.intersects(b.x, b.y, c.x - b.x, c.y - b.y) ||
+                obs.intersects(c.x, c.y, a.x - c.x, a.y - c.y)) {
+                return true;
+            }
         }
+        return false;
     }
 
-    private boolean isPointInTriangle(Point p, Point a, Point b, Point c) {
-        double area = triangleArea(a, b, c);
-        double area1 = triangleArea(p, b, c);
-        double area2 = triangleArea(a, p, c);
-        double area3 = triangleArea(a, b, p);
-        return Math.abs(area - (area1 + area2 + area3)) < 1e-6;
-    }
-
-    private double triangleArea(Point a, Point b, Point c) {
-        return Math.abs(a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2.0;
+    @Override
+    public String toString() {
+        return "Triangle[(" + a.x + "," + a.y + "), (" + b.x + "," + b.y + "), (" + c.x + "," + c.y + ")]";
     }
 }
