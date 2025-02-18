@@ -1,14 +1,15 @@
 package org.example.world;
 
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class World {
 
     public World(int w, int h, ERegionType regtype, Point _start, Point _destination,
         int _tailleRegion) {
-        width = h;
-        height = w;
+        width = w;
+        height = h;
         regiontype = regtype;
         tailleReg = _tailleRegion;
         start = _start;
@@ -26,9 +27,11 @@ public class World {
                 destinationRegion = new Region.Octile(destination.x, destination.y, tailleReg);
             }
         }
+        this.startReg = startReg;
+        this.destinationReg = destinationRegion;
         passThrough = new int[info.widthInRegion * info.heightInRegion];
         for (int ix = 0; ix < info.widthInRegion * info.heightInRegion; ix++) {
-            passThrough[ix] = 0;
+            passThrough[ix] = -1;
         }
         passThrough[(startReg.x / tailleReg) * info.heightInRegion + (startReg.y / tailleReg)] = InnerWorld.START;
         passThrough[(destinationRegion.x / tailleReg) *  info.heightInRegion + (destinationRegion.y / tailleReg)] = InnerWorld.DESTINATION;
@@ -48,6 +51,13 @@ public class World {
             this.x = regionStartX * tailleReg;
             this.y = regionStartY * tailleReg;
             this.distance = 0;
+        }
+
+        public boolean egaleA(Region r2) {
+            if (x == r2.x && y == r2.y) {
+                return true;
+            }
+            return false;
         }
 
         public Region(int x, int y, int tailleReg, double dist) {
@@ -121,17 +131,23 @@ public class World {
             }
         }
 
-        public List<Region> getAdjacent(Region r) {
-            List<Region> neighborhood = new ArrayList<>();
+        public Set<Region> getAdjacent(Region r) {
+            Set<Region> neighborhood = new LinkedHashSet<>();
             switch (regiontype) {
                 case OCTILE:
+                    int x_normalized = r.x / tailleReg;
+                    int y_normalized = r.y / tailleReg;
                     // We go through each adjacent region
                     // and store those that are not obstacles
-                    for (int x = r.x - 1; x < r.x + 2; x++) {
-                        if (x <= 0 || x >= widthInRegion) continue;
-                        for (int y = r.y - 1; y < r.y - 2; y++) {
-                            if (y <= 0 || y >= heightInRegion) continue;
-                            Region neigh = new Region(x, y, tailleReg, Math.sqrt(x + y));
+                    for (int x = x_normalized - 1; x < x_normalized + 2; x++) {
+                        if (x < 0 || x >= widthInRegion) continue;                        
+                        for (int y = y_normalized - 1; y < y_normalized + 2; y++) {
+                            if (y < 0 || y >= heightInRegion) continue;
+                            if (y == y_normalized && x == x_normalized) continue;
+                            if ((passThrough[x * heightInRegion + y] == InnerWorld.OBSTACLE)) continue;
+                            Region neigh = new Region(x * tailleReg, y * tailleReg, tailleReg, 
+                              Math.sqrt(Math.abs(x - x_normalized) 
+                                + Math.abs(y - y_normalized)) * tailleReg);
                             neighborhood.add(neigh);
                         }
                     }
@@ -142,11 +158,44 @@ public class World {
             return neighborhood;
         }
 
+        public void infoSetFather(int regx, int regy, int fatherId) {
+            passThrough[regx * heightInRegion + regy] = fatherId;
+        }
+
+        public int infoGetRegionId(Region reg) {
+            int x_normalized = reg.x / tailleReg;
+            int y_normalized = reg.y / tailleReg;
+            return x_normalized * heightInRegion + y_normalized;
+        }
+
         public int widthInRegion;
         public int heightInRegion;
         public int nbRegion;
     }
-    
+
+    public void setFather(int regx, int regy, int pereId) {
+        info.infoSetFather(regx, regy, pereId);
+    }
+
+    public int getNbRegion() {
+        return info.nbRegion;
+    }
+
+    public int getRegionId(Region reg) {
+        return info.infoGetRegionId(reg);
+    }
+
+    public Set<Region> adjacents(Region r) {
+        return info.getAdjacent(r);
+    }
+
+    public int heightInRegion() {
+        return info.heightInRegion;
+    }
+
+    public int widthInRegion() {
+        return info.widthInRegion;
+    }
 
     public int tailleReg;
     public int height;
