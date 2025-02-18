@@ -1,4 +1,4 @@
-package org.example.view;
+package org.example.View.Grille2D;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +30,7 @@ public class GrillePathfinding extends javax.swing.JFrame {
 
     public GrillePathfinding() {
         setTitle("Grille de Pathfinding");
+        setSize(600, 400);
         setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
