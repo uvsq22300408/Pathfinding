@@ -141,46 +141,4 @@ public class JPS extends AStarAlgorithm {
 
         return indexVoisins;
     }
-
-    @Override
-    public ArrayList<Point> calculChemin() {
-        initialise();
-
-        PriorityQueue<int[]> openSet = new PriorityQueue<>(Comparator.comparingDouble(a -> a[1]));
-        Map<Integer, Double> gScore = new HashMap<>();
-        Map<Integer, Integer> pred = new HashMap<>();
-        Set<Integer> closedSet = new HashSet<>();
-
-        // Initialisation du point de départ
-        gScore.put(indexDepart, 0.0);
-        openSet.add(new int[] { indexDepart, (int) (0 + heuristique(indexDepart)) });
-
-        while (!openSet.isEmpty()) {
-            int current = openSet.poll()[0];
-
-            if (current == indexArrivee) {
-                ArrayList<Point> chemin = cheminPoints(pred);
-                System.out.println("Distance de (" + pointDepart.x + ", " + pointDepart.y + ") vers (" + pointArrivee.x
-                        + ", " + pointArrivee.y + ") : " + gScore.get(indexArrivee));
-                return chemin;
-            }
-
-            closedSet.add(current);
-
-            for (int voisin : getIndexVoisins(current)) {
-                if (closedSet.contains(voisin))
-                    continue;
-
-                double tentativeGScore = gScore.getOrDefault(current, Double.MAX_VALUE) + getDist(current, voisin);
-
-                if (tentativeGScore < gScore.getOrDefault(voisin, Double.MAX_VALUE)) {
-                    pred.put(voisin, current);
-                    gScore.put(voisin, tentativeGScore);
-                    openSet.add(new int[] { voisin, (int) (tentativeGScore + heuristique(voisin)) });
-                }
-            }
-        }
-
-        return new ArrayList<>();
-    }
 }
