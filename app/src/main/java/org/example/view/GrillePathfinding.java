@@ -2,24 +2,16 @@ package org.example.view;
 
 import javax.swing.*;
 
-import org.example.algo.AStarAlgorithm;
-import org.example.algo.Algorithme;
-import org.example.algo.DijkstraAlgorithm;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import org.example.algo.*;
+import org.example.algo.Astar.AstarExecuter;
+import org.example.algo.Dijkstra.DijkstraExecuter;
 
-import org.example.algo.DijkstraAlgorithm;
-
-public class GrillePathfinding extends javax.swing.JFrame {
+public class GrillePathfinding extends JFrame {
     private static final int LIGNES = 20; // Nombre de lignes
     private static final int COLONNES = 20; // Nombre de colonnes
     private final javax.swing.JButton[][] boutonsGrille = new javax.swing.JButton[LIGNES][COLONNES]; // Boutons de la grille
@@ -87,8 +79,8 @@ public class GrillePathfinding extends javax.swing.JFrame {
         JButton boutonDijkstra = new JButton("Lancer Dijkstra");
         JButton boutonAstar = new JButton("Lancer A*");
 
-        boutonDijkstra.addActionListener(e -> executerAlgorithme(new DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
-        boutonAstar.addActionListener(e -> executerAlgorithme(new AStarAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
+        boutonDijkstra.addActionListener(e -> executerAlgorithme(new DijkstraExecuter(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
+        boutonAstar.addActionListener(e -> executerAlgorithme(new AstarExecuter(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
 
         boutonAstar.setPreferredSize(new Dimension(100, 40));
         boutonDijkstra.setPreferredSize(new Dimension(100, 40));
@@ -137,7 +129,7 @@ public class GrillePathfinding extends javax.swing.JFrame {
     /**
      * Exécute l'algorithme de pathfinding sélectionné.
      */
-    private void executerAlgorithme(Algorithme algo) {
+    private void executerAlgorithme(AlgorithmExecuter algo) {
 
         // Retirer le chemin précédent
         for (int i = 0; i < LIGNES; i++) {
@@ -153,7 +145,7 @@ public class GrillePathfinding extends javax.swing.JFrame {
             return;
         }
         long startTime = System.nanoTime();
-        ArrayList<Point> chemin = algo.calculChemin();
+        ArrayList<Point> chemin = algo.executeAlgo();
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         System.out.println("Execution time in nanoseconds: " + duration);
