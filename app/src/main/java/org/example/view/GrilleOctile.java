@@ -1,4 +1,5 @@
 package org.example.view;
+
 import static com.raylib.Raylib.*;
 import static com.raylib.Colors.*;
 public class GrilleOctile {

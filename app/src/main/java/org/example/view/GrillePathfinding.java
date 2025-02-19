@@ -1,17 +1,15 @@
 package org.example.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
+
+import org.example.algo.AStarAlgorithm;
+import org.example.algo.Algorithme;
+import org.example.algo.DijkstraAlgorithm;
+
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -26,10 +24,12 @@ public class GrillePathfinding extends javax.swing.JFrame {
     private static final int COLONNES = 20; // Nombre de colonnes
     private final javax.swing.JButton[][] boutonsGrille = new javax.swing.JButton[LIGNES][COLONNES]; // Boutons de la grille
     private final List<Point> pointsSelectionnes = new ArrayList<>(); // Points sélectionnés (départ/arrivée)
+    private final List<Point> obstacles = new ArrayList<>(); // Obstacles
 
     public GrillePathfinding() {
         setTitle("Grille de Pathfinding");
-        setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Créer la grille
@@ -69,7 +69,7 @@ public class GrillePathfinding extends javax.swing.JFrame {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     gererClicGauche(bouton, ligne, colonne);
                 } else if (SwingUtilities.isRightMouseButton(e)) {
-                    gererClicDroit(bouton);
+                    gererClicDroit(bouton, ligne, colonne);
                 }
             }
         });
@@ -84,8 +84,17 @@ public class GrillePathfinding extends javax.swing.JFrame {
         JPanel panneau = new JPanel(new GridLayout(5, 1, 5, 5));
         panneau.setPreferredSize(new Dimension(150, 0));
 
-        ajouterBoutonControle(panneau, "Lancer A*", "algo.AStarAlgorithm");
-        ajouterBoutonControle(panneau, "Lancer Dijkstra", "algo.DijkstraAlgorithm");
+        JButton boutonDijkstra = new JButton("Lancer Dijkstra");
+        JButton boutonAstar = new JButton("Lancer A*");
+
+        boutonDijkstra.addActionListener(e -> executerAlgorithme(new DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
+        boutonAstar.addActionListener(e -> executerAlgorithme(new AStarAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
+
+        boutonAstar.setPreferredSize(new Dimension(100, 40));
+        boutonDijkstra.setPreferredSize(new Dimension(100, 40));
+
+        panneau.add(boutonDijkstra);
+        panneau.add(boutonAstar);
 
         JButton boutonReinitialiser = new JButton("Réinitialiser la grille");
         boutonReinitialiser.setPreferredSize(new Dimension(100, 40));
@@ -93,16 +102,6 @@ public class GrillePathfinding extends javax.swing.JFrame {
         panneau.add(boutonReinitialiser);
 
         return panneau;
-    }
-
-    /**
-     * Ajoute un bouton pour exécuter un algorithme spécifique.
-     */
-    private void ajouterBoutonControle(JPanel panneau, String label, String classeAlgorithme) {
-        JButton bouton = new JButton(label);
-        bouton.setPreferredSize(new Dimension(100, 40));
-        bouton.addActionListener(e -> executerAlgorithme(classeAlgorithme));
-        panneau.add(bouton);
     }
 
     /**
@@ -125,45 +124,48 @@ public class GrillePathfinding extends javax.swing.JFrame {
     /**
      * Gère le clic droit sur un bouton de la grille (ajout/suppression d'obstacles).
      */
-    private void gererClicDroit(JButton bouton) {
+    private void gererClicDroit(JButton bouton, int ligne, int colonne) {
         if (bouton.getBackground() == Color.WHITE) {
             bouton.setBackground(Color.BLACK); // Ajout d'un obstacle
+            obstacles.add(new Point(ligne, colonne));
         } else if (bouton.getBackground() == Color.BLACK) {
             bouton.setBackground(Color.WHITE); // Suppression d'un obstacle
+            obstacles.remove(new Point(ligne, colonne));
         }
     }
 
     /**
      * Exécute l'algorithme de pathfinding sélectionné.
      */
-    private void executerAlgorithme(String classeAlgorithme) {
-        if (pointsSelectionnes.size() % 2 != 0) {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un nombre pair de points (départ et arrivée) !");
-            return;
-        }
+    private void executerAlgorithme(Algorithme algo) {
 
-        Set<Point> obstacles = new HashSet<>();
+        // Retirer le chemin précédent
         for (int i = 0; i < LIGNES; i++) {
             for (int j = 0; j < COLONNES; j++) {
-                if (boutonsGrille[i][j].getBackground() == Color.BLACK) {
-                    obstacles.add(new Point(i, j));
+                if (boutonsGrille[i][j].getBackground() == Color.GRAY) {
+                    boutonsGrille[i][j].setBackground(Color.WHITE);
                 }
             }
         }
 
-        if (classeAlgorithme == "algo.DijkstraAlgorithm") {
-            DijkstraAlgorithm algo = new org.example.algo.DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES);
-            long startTime = System.nanoTime();
-            ArrayList<Point> chemin = algo.calculChemin();
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime);
-            System.out.println("Execution time in nanoseconds: " + duration);
-
-            afficheChemin(chemin);
+        if (pointsSelectionnes.size() % 2 != 0) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un nombre pair de points (départ et arrivée) !");
+            return;
         }
+        long startTime = System.nanoTime();
+        ArrayList<Point> chemin = algo.calculChemin();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("Execution time in nanoseconds: " + duration);
 
+        afficheChemin(chemin);
     }
 
+
+    /**
+     * Affiche le chemin donné.
+     * @param chemin
+     */
     private void afficheChemin(ArrayList<Point> chemin) {
         for (Point p : chemin) {
             boutonsGrille[p.x][p.y].setBackground(Color.GRAY);
@@ -175,6 +177,7 @@ public class GrillePathfinding extends javax.swing.JFrame {
      */
     private void reinitialiserGrille() {
         pointsSelectionnes.clear();
+        obstacles.clear();
         for (int i = 0; i < LIGNES; i++) {
             for (int j = 0; j < COLONNES; j++) {
                 boutonsGrille[i][j].setBackground(Color.WHITE);
