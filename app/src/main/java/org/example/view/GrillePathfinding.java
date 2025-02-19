@@ -5,6 +5,7 @@ import javax.swing.*;
 import org.example.algo.AStarAlgorithm;
 import org.example.algo.Algorithme;
 import org.example.algo.DijkstraAlgorithm;
+import org.example.algo.JPS;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -78,15 +79,19 @@ public class GrillePathfinding extends JFrame {
 
         JButton boutonDijkstra = new JButton("Lancer Dijkstra");
         JButton boutonAstar = new JButton("Lancer A*");
+        JButton boutonJPS = new JButton("Lancer JPS");
 
         boutonDijkstra.addActionListener(e -> executerAlgorithme(new DijkstraAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
         boutonAstar.addActionListener(e -> executerAlgorithme(new AStarAlgorithm(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
+        boutonJPS.addActionListener(e -> executerAlgorithme(new JPS(pointsSelectionnes, obstacles, LIGNES, COLONNES)));
 
         boutonAstar.setPreferredSize(new Dimension(100, 40));
         boutonDijkstra.setPreferredSize(new Dimension(100, 40));
+        boutonJPS.setPreferredSize(new Dimension(100, 40));
 
         panneau.add(boutonDijkstra);
         panneau.add(boutonAstar);
+        panneau.add(boutonJPS);
 
         JButton boutonReinitialiser = new JButton("Réinitialiser la grille");
         boutonReinitialiser.setPreferredSize(new Dimension(100, 40));

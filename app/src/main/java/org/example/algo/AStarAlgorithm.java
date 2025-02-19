@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-
 public class AStarAlgorithm implements Algorithme {
 
     int colonnes;
@@ -26,7 +25,7 @@ public class AStarAlgorithm implements Algorithme {
         this.indexArrivee = getIndex(pointsSelectionnes.get(1));
     }
 
-    private ArrayList<Integer> getIndexVoisins(int sommet) {
+    protected ArrayList<Integer> getIndexVoisins(int sommet) {
         ArrayList<Integer> indexVoisins = new ArrayList<>();
         int[] coord = getCoord(sommet);
 
@@ -39,7 +38,7 @@ public class AStarAlgorithm implements Algorithme {
 
                     if ((yVoisin >= 0) && (yVoisin < colonnes)) {
                         if ((coord[0] != xVoisin) || (coord[1] != yVoisin)) {
-                            int indexVoisin = getIndex(new int[]{xVoisin, yVoisin});
+                            int indexVoisin = getIndex(new int[] { xVoisin, yVoisin });
                             if (grille.get(indexVoisin) != 3) {
                                 indexVoisins.add(indexVoisin);
                             }
@@ -51,23 +50,23 @@ public class AStarAlgorithm implements Algorithme {
         return indexVoisins;
     }
 
-    private int[] getCoord(int index) {
-        return new int[]{index / colonnes, index % colonnes};
+    protected int[] getCoord(int index) {
+        return new int[] { index / colonnes, index % colonnes };
     }
 
-    private Point getPoint(int index) {
+    protected Point getPoint(int index) {
         return new Point(index / colonnes, index % colonnes);
     }
 
-    private int getIndex(Point p) {
+    protected int getIndex(Point p) {
         return (p.x * colonnes) + p.y;
     }
 
-    private int getIndex(int[] p) {
+    protected int getIndex(int[] p) {
         return (p[0] * colonnes + p[1]);
     }
 
-    private double getDist(int i1, int i2) {
+    protected double getDist(int i1, int i2) {
         int[] p1 = getCoord(i1);
         int[] p2 = getCoord(i2);
         int dltX = p1[0] - p2[0];
@@ -76,14 +75,14 @@ public class AStarAlgorithm implements Algorithme {
         return Math.sqrt(dltX * dltX + dltY * dltY);
     }
 
-    private double heuristique(int index) {
+    protected double heuristique(int index) {
         int[] coord = getCoord(index);
         int dx = coord[0] - pointArrivee.x;
         int dy = coord[1] - pointArrivee.y;
         return Math.sqrt(dx * dx + dy * dy);
-    }    
+    }
 
-    private void initialise() {
+    protected void initialise() {
         for (int i = 0; i < lignes * colonnes; i++) {
             grille.add(0);
         }
@@ -96,13 +95,14 @@ public class AStarAlgorithm implements Algorithme {
         grille.set(indexArrivee, 2);
     }
 
-    private ArrayList<Point> cheminPoints(Map<Integer, Integer> pred) {
+    protected ArrayList<Point> cheminPoints(Map<Integer, Integer> pred) {
         ArrayList<Point> chemin = new ArrayList<>();
         Integer indexCourant = indexArrivee;
 
         while (indexCourant != indexDepart) {
             indexCourant = pred.get(indexCourant);
-            if (indexCourant == null) return new ArrayList<>();
+            if (indexCourant == null)
+                return new ArrayList<>();
             chemin.add(getPoint(indexCourant));
         }
         chemin.remove(chemin.size() - 1);
@@ -119,28 +119,30 @@ public class AStarAlgorithm implements Algorithme {
         Set<Integer> closedSet = new HashSet<>();
 
         gScore.put(indexDepart, 0.0);
-        openSet.add(new int[]{indexDepart, (int) (0 + heuristique(indexDepart))});
+        openSet.add(new int[] { indexDepart, (int) (0 + heuristique(indexDepart)) });
 
         while (!openSet.isEmpty()) {
             int current = openSet.poll()[0];
 
             if (current == indexArrivee) {
                 ArrayList<Point> chemin = cheminPoints(pred);
-                System.out.println("Distance de (" + pointDepart.x + ", " + pointDepart.y + ") vers (" + pointArrivee.x + ", " + pointArrivee.y + ") : " + gScore.get(indexArrivee));
+                System.out.println("Distance de (" + pointDepart.x + ", " + pointDepart.y + ") vers (" + pointArrivee.x
+                        + ", " + pointArrivee.y + ") : " + gScore.get(indexArrivee));
                 return chemin;
             }
 
             closedSet.add(current);
 
             for (int voisin : getIndexVoisins(current)) {
-                if (closedSet.contains(voisin)) continue;
+                if (closedSet.contains(voisin))
+                    continue;
 
                 double tentativeGScore = gScore.getOrDefault(current, Double.MAX_VALUE) + getDist(current, voisin);
 
                 if (tentativeGScore < gScore.getOrDefault(voisin, Double.MAX_VALUE)) {
                     pred.put(voisin, current);
                     gScore.put(voisin, tentativeGScore);
-                    openSet.add(new int[]{voisin, (int) (tentativeGScore + heuristique(voisin))});
+                    openSet.add(new int[] { voisin, (int) (tentativeGScore + heuristique(voisin)) });
                 }
             }
         }
