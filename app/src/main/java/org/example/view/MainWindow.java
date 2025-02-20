@@ -37,6 +37,7 @@ import java.time.Instant;
 
 import javax.swing.Timer;
 
+import org.example.world.examples.Astar;
 import org.example.world.examples.Dijkstra;
 import org.example.View.SansGrille2D.Obstacle;
 import org.example.world.LoadWorld;
@@ -53,7 +54,8 @@ public class MainWindow {
     public static void main(String[] args) {
         if (args.length == 0) {
             World world = LoadWorld.loadWorld("example1");
-            main_draw(world);
+            double longueur = 0;
+            main_draw(world, longueur);
         } else {
             switch (args[0]) {
                 case "benchmark-generate":
@@ -82,9 +84,16 @@ public class MainWindow {
                         }
                     }
                     break;
-                case "draw": {
-                    World world = LoadWorld.loadWorld(args[1]);
-                    main_draw(world);
+                case "draw-dijkstra": {
+                        World world = LoadWorld.loadWorld(args[1]);
+                        double longueur = Dijkstra.dijkstra(world);
+                        main_draw(world, longueur);
+                    }
+                    break;
+                case "draw-astar": {
+                        World world = LoadWorld.loadWorld(args[1]);
+                        double longueur = Astar.astar(world);
+                        main_draw(world, longueur);
                     }
                     break;
                 case "benchmark-run": {
@@ -96,24 +105,37 @@ public class MainWindow {
                         File[] graphes = dossier.listFiles();
                         int nbGraphes = graphes.length;
                         // Ajouter les autres algorithmes
-                        writer.write("nomGraphe,DijkstraLength,DijkstraTimeMs\n");
+                        writer.write("nomGraphe,DijkstraLength,DijkstraTimeMs,AstarLength,AstarTimeMs\n");
                         for (int gx = 0; gx < nbGraphes; gx++) {
                             System.out.println("opening: " + graphes[gx].getName());
                             World world = LoadWorld.loadWorld(graphes[gx].getName());
                             Instant before = Instant.now();
-                            double longueur = Dijkstra.dijkstra(world);
+                            double longueurDij = Dijkstra.dijkstra(world);
                             Instant after = Instant.now();
                             long timeElapsed = Duration.between(before, after).toMillis();
                             writer.write(graphes[gx].getName() + ",");
-                            if (longueur <= 0) {
+                            if (longueurDij <= 0) {
                                 writer.write("-1,"); // => Pas de chemin
                             }
                             else {
-                                writer.write(longueur + ",");
+                                writer.write(longueurDij + ",");
                             }
                             writer.write(timeElapsed + ",");
                             // Autres algos
-                            //...
+                            //... Astar
+                            before = Instant.now();
+                            double longueurAst = Astar.astar(world);
+                            after = Instant.now();
+                            timeElapsed = Duration.between(before, after).toMillis();
+                            if (longueurAst <= 0) {
+                                writer.write("-1,"); // => Pas de chemin
+                            }
+                            else {
+                                writer.write(longueurAst + ",");
+                            }
+                            writer.write(timeElapsed + ",");
+                            // Autres algos
+                            // ...
                             writer.write("\n");
                             writer.flush();
                         }
@@ -129,7 +151,12 @@ public class MainWindow {
         }
     }
 
-    public static void main_draw(World world) {
+    public static void main_draw(World world, double longueur) {
+        // Run un algo
+        //double longueur = Dijkstra.dijkstra(world);
+        Astar.astar(world);
+        System.out.println("Longueur trouvée: " + longueur);
+
         InitWindow(800, 600, "Pathfinding");
         SetTargetFPS(60);
         Camera2D camera = new Camera2D();
@@ -142,12 +169,6 @@ public class MainWindow {
         camera.offset(cameraOffset);
         camera.zoom(1.0f);
 
-        // Run un algo
-        double longueur = Dijkstra.dijkstra(world);
-        System.out.println("Longueur trouvée: " + longueur);
-
-        
-        
         while(!WindowShouldClose()) {
             if (IsKeyDown(KEY_UP)) targetVector.y(targetVector.y() - 10);
             if (IsKeyDown(KEY_DOWN)) targetVector.y(targetVector.y() + 10);
