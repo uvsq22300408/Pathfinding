@@ -1,5 +1,6 @@
 package org.example.world;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,6 +9,7 @@ public class World {
 
     public World(int w, int h, ERegionType regtype, Point _start, Point _destination,
         int _tailleRegion) {
+        obstacles = new ArrayList<>();
         width = w;
         height = h;
         regiontype = regtype;
@@ -108,6 +110,30 @@ public class World {
     public void addObstacle(float x, float y, float r) {
         Obstacle ob = new Obstacle(x, y, r);
         obstacles.add(ob);
+        // Get corner regions.
+        int tr = tailleReg;
+        Region obstacleCenter = new Region(x, y, tr);
+        int obstacleCenterId = getRegionId(obstacleCenter);
+        Region topLeftRegion = new Region(x - r, y - r, tr);
+        int topLeftId = getRegionId(topLeftRegion);
+        Region downRightRegion = new Region(x + r, y + r, tr);
+        int downRightId = getRegionId(downRightRegion);
+        Region upRegion = new Region(x, y + r, tr);
+        //passThrough[topLeftId] = InnerWorld.OBSTACLE;
+        //passThrough[downRightId] = InnerWorld.OBSTACLE;
+        //passThrough[obstacleCenterId] = InnerWorld.OBSTACLE;
+        // Mark the rectangle regions around obstacle as obstacle.
+        float squarewidth = 2*r;
+        float squareheight = 2*r;
+        for (float w = topLeftRegion.x; w <= downRightRegion.x; w += tr) {
+            for (float h = topLeftRegion.y; h <= downRightRegion.y; h += tr) {
+                Region obstacle = new Region(w, h, tr);
+                int id = getRegionId(obstacle);
+                if (id < info.nbRegion) {
+                    passThrough[id] = InnerWorld.OBSTACLE;
+                }
+            }
+        }
     }
 
     public static class InnerWorld {
