@@ -12,14 +12,10 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.algo.*;
-import org.example.algo.Astar.AstarExecuter;
-import org.example.algo.Dijkstra.DijkstraExecuter;
-
 public class GrillePathfinding extends JFrame {
     private static final int LIGNES = 20; // Nombre de lignes
     private static final int COLONNES = 20; // Nombre de colonnes
-    private final javax.swing.JButton[][] boutonsGrille = new javax.swing.JButton[LIGNES][COLONNES]; // Boutons de la grille
+    private final JButton[][] boutonsGrille = new JButton[LIGNES][COLONNES]; // Boutons de la grille
     private final List<Point> pointsSelectionnes = new ArrayList<>(); // Points sélectionnés (départ/arrivée)
     private final List<Point> obstacles = new ArrayList<>(); // Obstacles
 
@@ -30,17 +26,17 @@ public class GrillePathfinding extends JFrame {
         setLayout(new BorderLayout());
 
         // Créer la grille
-        javax.swing.JPanel panneauGrille = new javax.swing.JPanel(new GridLayout(LIGNES, COLONNES, 0, 0));
+        JPanel panneauGrille = new JPanel(new GridLayout(LIGNES, COLONNES, 0, 0));
         for (int i = 0; i < LIGNES; i++) {
             for (int j = 0; j < COLONNES; j++) {
-                javax.swing.JButton bouton = creerBoutonGrille(i, j);
+                JButton bouton = creerBoutonGrille(i, j);
                 boutonsGrille[i][j] = bouton;
                 panneauGrille.add(bouton);
             }
         }
 
         // Panneau des contrôles
-        javax.swing.JPanel panneauControle = creerPanneauControle();
+        JPanel panneauControle = creerPanneauControle();
 
         // Ajouter les panneaux à la fenêtre
         add(panneauGrille, BorderLayout.CENTER);
@@ -138,7 +134,7 @@ public class GrillePathfinding extends JFrame {
     /**
      * Exécute l'algorithme de pathfinding sélectionné.
      */
-    private void executerAlgorithme(AlgorithmExecuter algo) {
+    private void executerAlgorithme(Algorithme algo) {
 
         // Retirer le chemin précédent
         for (int i = 0; i < LIGNES; i++) {
@@ -154,7 +150,7 @@ public class GrillePathfinding extends JFrame {
             return;
         }
         long startTime = System.nanoTime();
-        ArrayList<Point> chemin = algo.executeAlgo();
+        ArrayList<Point> chemin = algo.calculChemin();
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         System.out.println("Execution time in nanoseconds: " + duration);

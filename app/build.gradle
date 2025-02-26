@@ -43,15 +43,3 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
-
-// Compilation en C (Dijkstra)
-tasks.register('compileNative', Exec) {
-    description = 'Compile le fichier Dijkstra.c en exécutable'
-    workingDir file("$projectDir/src/main/java/org/example/algo/Dijkstra")
-    commandLine 'gcc', 'DijkstraAlgo.c', '-o', 'DijkstraAlgo'
-    outputs.file file("$projectDir/src/main/java/org/example/algo/Dijkstra/DijkstraAlgo")
-}
-
-tasks.named('run').configure {
-    dependsOn 'compileNative'
-}
