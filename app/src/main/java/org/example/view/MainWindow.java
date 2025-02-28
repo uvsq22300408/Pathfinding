@@ -53,9 +53,7 @@ public class MainWindow {
     
     public static void main(String[] args) {
         if (args.length == 0) {
-            World world = LoadWorld.loadWorld("example1");
-            double longueur = 0;
-            main_draw(world, longueur);
+            return;
         } else {
             switch (args[0]) {
                 case "benchmark-generate":
@@ -85,15 +83,23 @@ public class MainWindow {
                     }
                     break;
                 case "draw-dijkstra": {
+                    if (args.length > 1) {
                         World world = LoadWorld.loadWorld(args[1]);
                         double longueur = Dijkstra.dijkstra(world);
                         main_draw(world, longueur);
+                    } else {
+                        System.out.println("Un nom de graphe dans app/benchmark est requis.");
+                    }
                     }
                     break;
                 case "draw-astar": {
+                    if (args.length > 1) {
                         World world = LoadWorld.loadWorld(args[1]);
                         double longueur = Astar.astar(world);
                         main_draw(world, longueur);
+                    } else {
+                        System.out.println("Un nom de graphe dans app/benchmark est requis.");
+                    }
                     }
                     break;
                 case "benchmark-run": {
@@ -146,6 +152,7 @@ public class MainWindow {
                     break;
                 }
                 default:
+                    System.out.println("arg " + args[0] + " not recognized.");
                     break;
             }
         }

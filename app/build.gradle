@@ -36,7 +36,7 @@ java {
 application {
     // Define the main class for the application.
     //mainClass = 'org.example.view.GrillePathfinding'
-    mainClass = 'org.example.view.MainWindow'
+    mainClass = 'org.example.Main'
 
 }
 
