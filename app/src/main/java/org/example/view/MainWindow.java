@@ -39,6 +39,7 @@ import javax.swing.Timer;
 
 import org.example.world.examples.Astar;
 import org.example.world.examples.Dijkstra;
+import org.example.world.examples.Quadtree;
 import org.example.View.SansGrille2D.Obstacle;
 import org.example.world.LoadWorld;
 import org.example.world.RandomWorld;
@@ -82,6 +83,16 @@ public class MainWindow {
                         }
                     }
                     break;
+                case "draw-quadtree": {
+                    if (args.length > 1) {
+                        World world = LoadWorld.loadWorld(args[1]);
+                        Quadtree.quadtree(world);
+                        DrawQuadTree.drawQuadTree(world);
+                    } else {
+                        System.out.println("Un nom de graphe dans app/benchmark est requis.");
+                    }
+                }
+                break;
                 case "draw-dijkstra": {
                     if (args.length > 1) {
                         World world = LoadWorld.loadWorld(args[1]);
