@@ -1,6 +1,5 @@
 package org.example.world.examples;
 
-import java.nio.channels.Pipe.SourceChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,26 +27,17 @@ public class Astar {
         fScore[world.getRegionId(start)] = h(start, destination);
         int iteri = 0;
         while(!openSet.isEmpty()) {
-            //System.out.println("iter no : " + iteri);
-            //System.out.flush();
             Region current = getMinFScoreRegion(fScore, openSet, world);
-            //System.out.println("current id = " + world.getRegionId(current));
             if (current == null) {
-                //System.out.println("Pas de min trouve !");
-                //System.out.flush();
                 return -1; // Pas de chemin.
             }
             if (current.egaleA(destination)) {
-                //System.out.println("destination found !");
-                //System.out.flush();
                 return gScore[world.getRegionId(destination)];
             }
             openSet.remove(current);
             Set<Region> adjacents = world.adjacents(current);
-            //System.out.println("nb adjacents = " + adjacents.size());
             for (Region adj : adjacents) {
                 double tentativeGScore = gScore[world.getRegionId(current)] + adj.distance;
-                //System.out.println("tentativeGScore = " + tentativeGScore);
                 if (gScore[world.getRegionId(adj)] == Infinity 
                         || tentativeGScore < gScore[world.getRegionId(adj)]) {
                     world.setFather(adj.x / world.tailleReg, adj.y / world.tailleReg,

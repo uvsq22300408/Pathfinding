@@ -86,7 +86,8 @@ public class MainWindow {
                 case "draw-quadtree": {
                     if (args.length > 1) {
                         World world = LoadWorld.loadWorld(args[1]);
-                        Quadtree.quadtree(world);
+                        double distance = Quadtree.quadtree(world);
+                        System.out.println("Quadtree distance = " + distance);
                         DrawQuadTree.drawQuadTree(world);
                     } else {
                         System.out.println("Un nom de graphe dans app/benchmark est requis.");
