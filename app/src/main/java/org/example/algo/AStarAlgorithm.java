@@ -1,4 +1,4 @@
-package org.example.algo;
+package org.example.Algo;
 
 import java.awt.*;
 import java.util.*;
