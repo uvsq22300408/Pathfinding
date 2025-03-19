@@ -1,4 +1,4 @@
-package org.example.View.Grille2D;
+package org.example.view;
 
 import javax.swing.*;
 
