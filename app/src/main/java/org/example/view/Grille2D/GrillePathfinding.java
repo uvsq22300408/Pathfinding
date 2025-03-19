@@ -1,4 +1,4 @@
-package org.example.view;
+package org.example.view.grille2D;
 
 import javax.swing.*;
 
@@ -13,15 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GrillePathfinding extends JFrame {
-    private static final int LIGNES = 20; // Nombre de lignes
-    private static final int COLONNES = 20; // Nombre de colonnes
-    private final JButton[][] boutonsGrille = new JButton[LIGNES][COLONNES]; // Boutons de la grille
+    private static final int LIGNES = 150; // Nombre de lignes
+    private static final int COLONNES = 150; // Nombre de colonnes
+    private final CasePanel[][] cases = new CasePanel[LIGNES][COLONNES]; // Boutons de la grille
     private final List<Point> pointsSelectionnes = new ArrayList<>(); // Points sélectionnés (départ/arrivée)
     private final List<Point> obstacles = new ArrayList<>(); // Obstacles
 
+
     public GrillePathfinding() {
-        setTitle("Grille de Pathfinding");
-        setSize(600, 400);
+        setTitle("Grille 2D Pathfinding");
+        setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -29,9 +30,9 @@ public class GrillePathfinding extends JFrame {
         JPanel panneauGrille = new JPanel(new GridLayout(LIGNES, COLONNES, 0, 0));
         for (int i = 0; i < LIGNES; i++) {
             for (int j = 0; j < COLONNES; j++) {
-                JButton bouton = creerBoutonGrille(i, j);
-                boutonsGrille[i][j] = bouton;
-                panneauGrille.add(bouton);
+                CasePanel casePanel = new CasePanel(i, j);
+                cases[i][j] = casePanel;
+                panneauGrille.add(casePanel);
             }
         }
 
@@ -47,27 +48,70 @@ public class GrillePathfinding extends JFrame {
         setVisible(true);
     }
 
-    /**
-     * Crée un bouton de la grille avec les événements de clic gauche et droit.
-     */
-    private JButton creerBoutonGrille(int ligne, int colonne) {
-        JButton bouton = new JButton();
-        bouton.setBackground(Color.WHITE);
-        bouton.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-        bouton.setMargin(new Insets(0, 0, 0, 0));
-
-        bouton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    gererClicGauche(bouton, ligne, colonne);
-                } else if (SwingUtilities.isRightMouseButton(e)) {
-                    gererClicDroit(bouton, ligne, colonne);
+    private void ajouterCercleObstacle(int centreX, int centreY, int rayon) {
+        for (int i = -rayon; i <= rayon; i++) {
+            for (int j = -rayon; j <= rayon; j++) {
+                int x = centreX + i;
+                int y = centreY + j;
+                if (x >= 0 && x < LIGNES && y >= 0 && y < COLONNES && i * i + j * j <= rayon * rayon) {
+                    cases[x][y].setBackground(Color.BLACK);
+                    obstacles.add(new Point(x, y));
                 }
             }
-        });
+        }
+    }
 
-        return bouton;
+
+    private class CasePanel extends JPanel {
+        private final Color[] colors = {Color.WHITE, Color.GREEN, Color.RED, Color.BLACK};
+        private int colorIndex = 0;
+        private final int ligne, colonne;
+    
+        public CasePanel(int ligne, int colonne) {
+            this.ligne = ligne;
+            this.colonne = colonne;
+            setBackground(colors[colorIndex]);
+            setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        gererClicGauche();
+                    } else if (SwingUtilities.isRightMouseButton(e)) {
+                        gererClicDroit(e.isShiftDown());
+                    }
+                }
+            });
+        }
+    
+        private void gererClicGauche() {
+            if (getBackground() == Color.WHITE) {
+                if (pointsSelectionnes.size() % 2 == 0) {
+                    setBackground(Color.GREEN);
+                } else {
+                    setBackground(Color.RED);
+                }
+                pointsSelectionnes.add(new Point(ligne, colonne));
+            } else if (getBackground() == Color.GREEN || getBackground() == Color.RED) {
+                pointsSelectionnes.remove(new Point(ligne, colonne));
+                setBackground(Color.WHITE);
+            }
+        }
+    
+        private void gererClicDroit(boolean isShiftPressed) {
+            if (isShiftPressed) {
+                ajouterCercleObstacle(ligne, colonne, 10);
+            } else {
+                if (getBackground() == Color.WHITE) {
+                    setBackground(Color.BLACK);
+                    obstacles.add(new Point(ligne, colonne));
+                } else if (getBackground() == Color.BLACK) {
+                    setBackground(Color.WHITE);
+                    obstacles.remove(new Point(ligne, colonne));
+                }
+            }
+        }
     }
 
     /**
@@ -102,36 +146,6 @@ public class GrillePathfinding extends JFrame {
     }
 
     /**
-     * Gère le clic gauche sur un bouton de la grille (ajout/suppression de départ ou arrivée).
-     */
-    private void gererClicGauche(JButton bouton, int ligne, int colonne) {
-        if (bouton.getBackground() == Color.WHITE) {
-            if (pointsSelectionnes.size() % 2 == 0) {
-                bouton.setBackground(Color.GREEN); // Point de départ
-            } else {
-                bouton.setBackground(Color.RED); // Point d'arrivée
-            }
-            pointsSelectionnes.add(new Point(ligne, colonne));
-        } else if (bouton.getBackground() == Color.GREEN || bouton.getBackground() == Color.RED) {
-            pointsSelectionnes.remove(new Point(ligne, colonne));
-            bouton.setBackground(Color.WHITE);
-        }
-    }
-
-    /**
-     * Gère le clic droit sur un bouton de la grille (ajout/suppression d'obstacles).
-     */
-    private void gererClicDroit(JButton bouton, int ligne, int colonne) {
-        if (bouton.getBackground() == Color.WHITE) {
-            bouton.setBackground(Color.BLACK); // Ajout d'un obstacle
-            obstacles.add(new Point(ligne, colonne));
-        } else if (bouton.getBackground() == Color.BLACK) {
-            bouton.setBackground(Color.WHITE); // Suppression d'un obstacle
-            obstacles.remove(new Point(ligne, colonne));
-        }
-    }
-
-    /**
      * Exécute l'algorithme de pathfinding sélectionné.
      */
     private void executerAlgorithme(Algorithme algo) {
@@ -139,8 +153,8 @@ public class GrillePathfinding extends JFrame {
         // Retirer le chemin précédent
         for (int i = 0; i < LIGNES; i++) {
             for (int j = 0; j < COLONNES; j++) {
-                if (boutonsGrille[i][j].getBackground() == Color.GRAY) {
-                    boutonsGrille[i][j].setBackground(Color.WHITE);
+                if (cases[i][j].getBackground() == Color.GRAY) {
+                    cases[i][j].setBackground(Color.WHITE);
                 }
             }
         }
@@ -165,7 +179,7 @@ public class GrillePathfinding extends JFrame {
      */
     private void afficheChemin(ArrayList<Point> chemin) {
         for (Point p : chemin) {
-            boutonsGrille[p.x][p.y].setBackground(Color.GRAY);
+            cases[p.x][p.y].setBackground(Color.GRAY);
         }
     }
 
@@ -177,7 +191,7 @@ public class GrillePathfinding extends JFrame {
         obstacles.clear();
         for (int i = 0; i < LIGNES; i++) {
             for (int j = 0; j < COLONNES; j++) {
-                boutonsGrille[i][j].setBackground(Color.WHITE);
+                cases[i][j].setBackground(Color.WHITE);
             }
         }
     }
