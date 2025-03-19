@@ -42,7 +42,6 @@ import javax.swing.Timer;
 import org.example.world.examples.Astar;
 import org.example.world.examples.Dijkstra;
 import org.example.world.examples.Quadtree;
-import org.example.View.SansGrille2D.Obstacle;
 import org.example.world.LoadWorld;
 import org.example.world.RandomWorld;
 import org.example.world.SaveWorld;
