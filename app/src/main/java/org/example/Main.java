@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.View.Grille2D.*;
+import org.example.view.GrillePathfinding;
 import org.example.view.MainWindow;
 
 import java.util.Arrays;
