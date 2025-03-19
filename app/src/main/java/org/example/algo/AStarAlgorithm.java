@@ -106,35 +106,23 @@ public class AStarAlgorithm implements Algorithme {
             chemin.add(getPoint(indexCourant));
         }
         chemin.remove(chemin.size() - 1);
-        Collections.reverse(chemin);
         return chemin;
-    }
-
-    static class Node {
-        int index;
-        double fScore;
-
-        Node(int index, double fScore) {
-            this.index = index;
-            this.fScore = fScore;
-        }
     }
 
     @Override
     public ArrayList<Point> calculChemin() {
         initialise();
 
-        PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingDouble(n -> n.fScore));
+        PriorityQueue<int[]> openSet = new PriorityQueue<>(Comparator.comparingDouble(a -> a[1]));
         Map<Integer, Double> gScore = new HashMap<>();
         Map<Integer, Integer> pred = new HashMap<>();
         Set<Integer> closedSet = new HashSet<>();
 
         gScore.put(indexDepart, 0.0);
-        openSet.add(new Node(indexDepart, heuristique(indexDepart)));
+        openSet.add(new int[] { indexDepart, (int) (0 + heuristique(indexDepart)) });
 
         while (!openSet.isEmpty()) {
-            Node currentNode = openSet.poll();
-            int current = currentNode.index;
+            int current = openSet.poll()[0];
 
             if (current == indexArrivee) {
                 ArrayList<Point> chemin = cheminPoints(pred);
@@ -154,9 +142,7 @@ public class AStarAlgorithm implements Algorithme {
                 if (tentativeGScore < gScore.getOrDefault(voisin, Double.MAX_VALUE)) {
                     pred.put(voisin, current);
                     gScore.put(voisin, tentativeGScore);
-
-                    openSet.removeIf(node -> node.index == voisin);
-                    openSet.add(new Node(voisin, tentativeGScore + heuristique(voisin)));
+                    openSet.add(new int[] { voisin, (int) (tentativeGScore + heuristique(voisin)) });
                 }
             }
         }
