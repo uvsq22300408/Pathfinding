@@ -20,7 +20,9 @@ public class Quadtree {
     public static double quadtree(World world) {
         // Divide regions in 4 if they contain an obstacle
         // until they get to a minimum size
-        regionId = 0;
+        startRegion = null;
+        endRegion = null;
+        Quadtree.regionId = 0;
         QuadtreeRegion reg = new QuadtreeRegion(0, 0, 1);
         reg.containsObstacle = containsObstacle(world, reg);
         Hashtable<Integer, ArrayList<QuadtreeRegion>> mapRegionsByX = new Hashtable<>();
@@ -39,19 +41,19 @@ public class Quadtree {
             return -1;
         }
         // Run A* to find a path along regions centers
-        QuadtreeRegion[] fathers = new QuadtreeRegion[regionId];
+        Quadtree.fathers = new QuadtreeRegion[Quadtree.regionId];
         fathers[startRegion.id] = null;
         List<QuadtreeRegion> openSet = new ArrayList<>();
         openSet.add(startRegion);
-        double[] gScore = new double[regionId];
-        double[] fScore = new double[regionId];
+        double[] gScore = new double[Quadtree.regionId];
+        double[] fScore = new double[Quadtree.regionId];
         
-        for (int rx = 0; rx < regionId; rx++) {
+        for (int rx = 0; rx < Quadtree.regionId; rx++) {
             gScore[rx] = Infinity;
             fScore[rx] = Infinity;
         }
         gScore[startRegion.id] = 0;
-        fScore[startRegion.id] = h(startRegion, endRegion);
+        fScore[startRegion.id] = h(startRegion, world);
         while(!openSet.isEmpty()) {
             QuadtreeRegion current = getMinFScoreRegion(fScore, openSet, world);
             if (current == null) {
@@ -69,6 +71,10 @@ public class Quadtree {
                 int adjheight = world.height / adj.divisionFactor;
                 double adjCenterX = adj.x + (adjwidth / 2.0);
                 double adjCenterY = adj.y + (adjheight / 2.0);
+                if (adj.id == endRegion.id) {
+                    adjCenterX = world.destination.x;
+                    adjCenterY = world.destination.y;
+                }
                 if (current.id == startRegion.id) {
                     // Return distance between start and neighbor's center
                     double dx = adjCenterX - world.start.x;
@@ -83,12 +89,11 @@ public class Quadtree {
                     double dy = adjCenterY - currentCenterY;
                     distance = Math.sqrt(dx * dx + dy * dy);
                 }
-                double tentativeGScore = gScore[adj.id] + distance;
-                if (gScore[adj.id] == Infinity 
-                        || tentativeGScore < gScore[adj.id]) {
-                    fathers[adj.id] = current;
+                double tentativeGScore = gScore[current.id] + distance;
+                if (gScore[adj.id] == Infinity || tentativeGScore < gScore[adj.id]) { 
+                    Quadtree.fathers[adj.id] = current;
                     gScore[adj.id] = tentativeGScore;
-                    fScore[adj.id] = tentativeGScore + h(adj, endRegion);
+                    fScore[adj.id] = tentativeGScore + h(adj, world);
                     if (!openSet.contains(adj)) {
                         openSet.add(adj);
                     }
@@ -99,10 +104,15 @@ public class Quadtree {
     }
 
     /** Astar heuristic function. */
-    private static double h(QuadtreeRegion start, QuadtreeRegion dest) {
-        // Return heuristic distance between start and dest.
-        // Here, euclidean distance
-        return Math.sqrt(Math.abs(dest.x - start.x) + Math.abs(dest.y - start.y));
+    private static double h(QuadtreeRegion start, World world) {
+        // Return heuristic distance between start and world dest.
+        int startwidth = world.width / start.divisionFactor;
+        int startheight = world.height / start.divisionFactor;
+        int startCenterX = start.x + startwidth / 2;
+        int startCenterY = start.y + startheight / 2;
+        double dx = world.destination.x - startCenterX;
+        double dy = world.destination.y - startCenterY;
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     /** Return minreg, the region having the smallest fscore,
@@ -127,7 +137,6 @@ public class Quadtree {
      * width and height are the world's dimensions
      */
     public static Set<QuadtreeRegion> adjacents(QuadtreeRegion currentRegion, int width, int height) {
-        //System.out.println("====== Region" + currentRegion.id);
         int currentWidth = width / currentRegion.divisionFactor;
         int currentHeight = height / currentRegion.divisionFactor;
         Set<QuadtreeRegion> adj = new LinkedHashSet<>();
@@ -135,6 +144,7 @@ public class Quadtree {
         List<QuadtreeRegion> leftReg = finalMapRegionsByXPlusWidth.get(currentRegion.x);
         List<QuadtreeRegion> leftNeighbours = finalMapRegionsByXPlusWidth.get(currentRegion.x - 1);
         List<QuadtreeRegion> left = fuse(leftReg, leftNeighbours);
+        //System.out.println("====== Region" + currentRegion.id);
         //System.out.println("leftReg: " + currentRegion.x + " finalX+Width : " + (currentRegion.x -1));
         if (left != null) {
             left.forEach((r) -> {
@@ -247,7 +257,7 @@ public class Quadtree {
                 int regwidth = world.width / reg.divisionFactor;
                 int regheight = world.height / reg.divisionFactor;
                 System.out.println("Region id=" + reg.id + " width=" + regwidth 
-                    + " height=" + regheight + " x=" + reg.x + " y=" + reg.y);
+                   + " height=" + regheight + " x=" + reg.x + " y=" + reg.y);
                 ArrayList<QuadtreeRegion> regionsByX = mapRegionsByX.get(reg.x);
                 ArrayList<QuadtreeRegion> regionsByY = mapRegionsByY.get(reg.y);
                 ArrayList<QuadtreeRegion> regionsByXPlusWidth = mapRegionsByXPlusWidth.get(reg.x + regwidth);
@@ -346,4 +356,5 @@ public class Quadtree {
     public static QuadtreeRegion startRegion;
     public static QuadtreeRegion endRegion;
     public static int regionId;
+    public static QuadtreeRegion[] fathers;
 }

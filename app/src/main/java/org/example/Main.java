@@ -47,10 +47,13 @@ public class Main {
         System.out.println("  grille : 2D grid Swing");
         System.out.println("  sansGrille : Swing without grid");
         System.out.println(" OPTIONS WORLD:");
+        System.out.println("  === Benchmark");
         System.out.println("  benchmark-generate: generate random graphs in benchmark folder");
         System.out.println("  benchmark-run: Run all algorithms against the graphs in app/benchmark/");
+        System.out.println("  === Draw Algorithm");
         System.out.println("  draw-astar GRAPHNAME : execute A* on GRAPHNAME from app/benchmarks/");
         System.out.println("  draw-dijkstra GRAPHNAME : execute dijkstra on GRAPHNAME from app/benchmarks/");
+        System.out.println("  draw-quadtree GRAPHNAME : execute quadtree on GRAPHNAME from app/benchmarks/");
         System.out.println(" OPTIONS GRILLE:");
         System.out.println(" OPTIONS SANS_GRILLE:");
     }

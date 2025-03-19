@@ -57,12 +57,19 @@ public class DrawQuadTree {
         Enumeration<ArrayList<QuadtreeRegion>> regions = 
             Quadtree.finalMapRegionsByX.elements();
 
-        int startWidth = world.width / Quadtree.startRegion.divisionFactor;
-        int startheight = world.height / Quadtree.startRegion.divisionFactor;
-        int endWidth = world.width / Quadtree.endRegion.divisionFactor;
-        int endHeight = world.height / Quadtree.endRegion.divisionFactor;
+        Set<QuadtreeRegion> adj = null;
+        int startWidth = 0;
+        int startheight = 0;
+        int endWidth = 0;
+        int endHeight = 0;
+        if (Quadtree.startRegion != null && Quadtree.endRegion != null) {
+            startWidth = world.width / Quadtree.startRegion.divisionFactor;
+            startheight = world.height / Quadtree.startRegion.divisionFactor;
+            endWidth = world.width / Quadtree.endRegion.divisionFactor;
+            endHeight = world.height / Quadtree.endRegion.divisionFactor;
 
-        Set<QuadtreeRegion> adj = Quadtree.adjacents(Quadtree.startRegion, world.width, world.height);
+            adj = Quadtree.adjacents(Quadtree.startRegion, world.width, world.height);
+        }
         while(!WindowShouldClose()) {
             if (IsKeyDown(KEY_UP)) targetVector.y(targetVector.y() - 10);
             if (IsKeyDown(KEY_DOWN)) targetVector.y(targetVector.y() + 10);
@@ -75,13 +82,30 @@ public class DrawQuadTree {
             BeginMode2D(camera);
             ClearBackground(RAYWHITE);
             DrawRectangle(0,0, world.width, world.height, BLUE);
-            // Draw Start
-            DrawRectangle(Quadtree.startRegion.x, Quadtree.startRegion.y, startWidth, startheight, LIME);
-            // Draw Adjacent to Start
-            adj.forEach((radj) -> {
-                DrawRectangle(radj.x, radj.y, 20, 20, PURPLE);
-            });
-            DrawRectangle(Quadtree.endRegion.x, Quadtree.endRegion.y, endWidth, endHeight, RED);
+            if (adj != null) {
+                // Draw Start
+                DrawRectangle(Quadtree.startRegion.x, Quadtree.startRegion.y, startWidth, startheight, LIME);
+                // Draw Adjacent to Start
+                adj.forEach((radj) -> {
+                    DrawRectangle(radj.x, radj.y, 20, 20, PURPLE);
+                });
+                DrawRectangle(Quadtree.endRegion.x, Quadtree.endRegion.y, endWidth, endHeight, RED);
+            }
+            // Draw path 
+            if (Quadtree.fathers != null && Quadtree.endRegion != null) {
+                QuadtreeRegion current = Quadtree.endRegion;
+                while (Quadtree.fathers[current.id] != null) {
+                    QuadtreeRegion f = Quadtree.fathers[current.id];
+                    int fwidth = world.width / f.divisionFactor;
+                    int fheight = world.height / f.divisionFactor;
+                    DrawRectangle(f.x + (fwidth / 4), f.y + (fheight / 4), (2*fwidth / 4),
+                         (2*fheight / 4), RAYWHITE);
+                    current = f;
+                }
+            }
+            // Draw Start point and End point
+            DrawCircle(Math.round(world.start.x), Math.round(world.start.y), 8, PURPLE);
+            DrawCircle(Math.round(world.destination.x), Math.round(world.destination.y), 8, PURPLE);
 
             regions = Quadtree.finalMapRegionsByX.elements();
             MainWindow.drawObstacles(world);

@@ -171,9 +171,10 @@ public class World {
                             if (y < 0 || y >= heightInRegion) continue;
                             if (y == y_normalized && x == x_normalized) continue;
                             if ((passThrough[x * heightInRegion + y] == InnerWorld.OBSTACLE)) continue;
-                            Region neigh = new Region(x * tailleReg, y * tailleReg, tailleReg, 
-                              Math.sqrt(Math.abs(x - x_normalized) 
-                                + Math.abs(y - y_normalized)) * tailleReg);
+                            double distanceX = (x - x_normalized) * tailleReg;
+                            double distanceY = (y - y_normalized) * tailleReg;
+                            double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                            Region neigh = new Region(x * tailleReg, y * tailleReg, tailleReg, distance);
                             neighborhood.add(neigh);
                         }
                     }
