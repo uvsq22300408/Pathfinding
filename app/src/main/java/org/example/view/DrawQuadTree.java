@@ -61,6 +61,8 @@ public class DrawQuadTree {
         int startheight = world.height / Quadtree.startRegion.divisionFactor;
         int endWidth = world.width / Quadtree.endRegion.divisionFactor;
         int endHeight = world.height / Quadtree.endRegion.divisionFactor;
+
+        Set<QuadtreeRegion> adj = Quadtree.adjacents(Quadtree.startRegion, world.width, world.height);
         while(!WindowShouldClose()) {
             if (IsKeyDown(KEY_UP)) targetVector.y(targetVector.y() - 10);
             if (IsKeyDown(KEY_DOWN)) targetVector.y(targetVector.y() + 10);
@@ -76,7 +78,6 @@ public class DrawQuadTree {
             // Draw Start
             DrawRectangle(Quadtree.startRegion.x, Quadtree.startRegion.y, startWidth, startheight, LIME);
             // Draw Adjacent to Start
-            Set<QuadtreeRegion> adj = Quadtree.adjacents(Quadtree.startRegion, world.width, world.height);
             adj.forEach((radj) -> {
                 DrawRectangle(radj.x, radj.y, 20, 20, PURPLE);
             });

@@ -34,6 +34,10 @@ public class Quadtree {
         finalMapRegionsByXPlusWidth = mapRegionsByXPlusWidth;
         finalMapRegionsByYPlusHeight = mapRegionsByYPlusHeight;
         
+        if (startRegion == null || endRegion == null) {
+            System.out.println("Error: Quadtree -> start or end was not found.");
+            return -1;
+        }
         // Run A* to find a path along regions centers
         QuadtreeRegion[] fathers = new QuadtreeRegion[regionId];
         fathers[startRegion.id] = null;
@@ -123,13 +127,17 @@ public class Quadtree {
      * width and height are the world's dimensions
      */
     public static Set<QuadtreeRegion> adjacents(QuadtreeRegion currentRegion, int width, int height) {
+        //System.out.println("====== Region" + currentRegion.id);
         int currentWidth = width / currentRegion.divisionFactor;
         int currentHeight = height / currentRegion.divisionFactor;
         Set<QuadtreeRegion> adj = new LinkedHashSet<>();
         // Select all adjacent regions left
         List<QuadtreeRegion> leftReg = finalMapRegionsByXPlusWidth.get(currentRegion.x);
-        if (leftReg != null) {
-            leftReg.forEach((r) -> {
+        List<QuadtreeRegion> leftNeighbours = finalMapRegionsByXPlusWidth.get(currentRegion.x - 1);
+        List<QuadtreeRegion> left = fuse(leftReg, leftNeighbours);
+        //System.out.println("leftReg: " + currentRegion.x + " finalX+Width : " + (currentRegion.x -1));
+        if (left != null) {
+            left.forEach((r) -> {
                 int rheight = height / r.divisionFactor;
                 if (r.y <= currentRegion.y + currentHeight && r.y + rheight >= currentRegion.y) {
                     adj.add(r);
@@ -138,8 +146,11 @@ public class Quadtree {
         }
         // Select all adjacent regions right
         List<QuadtreeRegion> rightReg = finalMapRegionsByX.get(currentRegion.x + currentWidth);
-        if (rightReg != null) {
-            rightReg.forEach((r) -> {
+        List<QuadtreeRegion> rightNeighbours = finalMapRegionsByX.get(currentRegion.x + currentWidth + 1);
+        List<QuadtreeRegion> right = fuse(rightReg, rightNeighbours);
+        //System.out.println("rightReg: " + (currentRegion.x + currentWidth) + " finalX : " + (currentRegion.x + currentWidth + 1));
+        if (right != null) {
+            right.forEach((r) -> {
                 int rheight = height / r.divisionFactor;
                 if (r.y <= currentRegion.y + currentHeight && r.y + rheight >= currentRegion.y) {
                     adj.add(r);
@@ -148,8 +159,11 @@ public class Quadtree {
         }
         // Select all adjacent regions up (above)
         List<QuadtreeRegion> upReg = finalMapRegionsByY.get(currentRegion.y + currentHeight);
-        if (upReg != null) {
-            upReg.forEach((r) -> {
+        List<QuadtreeRegion> upNeighbours = finalMapRegionsByY.get(currentRegion.y + currentHeight + 1);
+        List<QuadtreeRegion> up = fuse(upReg, upNeighbours);
+        //System.out.println("upReg: " + (currentRegion.y + currentHeight) + "finalY : " + (currentRegion.y + currentHeight +1));
+        if (up != null) {
+            up.forEach((r) -> {
                 int rwidth = width / r.divisionFactor;
                 if (r.x <= currentRegion.x + currentWidth && r.x + rwidth >= currentRegion.x) {
                     adj.add(r);
@@ -157,16 +171,19 @@ public class Quadtree {
             });
         }
         // Select all adjacent regions down (below)
-        List<QuadtreeRegion> downReg = finalMapRegionsByYPlusHeight.get(currentRegion.y); 
-            if (downReg != null) {
-                downReg.forEach((r) -> {
-                    int rwidth = width / r.divisionFactor;
-                    if (r.x <= currentRegion.x + currentWidth && r.x + rwidth >= currentRegion.x) {
-                        adj.add(r);
-                    }
-                });
-            }
-        System.out.println("Adjacents: " + adj.size());
+        List<QuadtreeRegion> downReg = finalMapRegionsByYPlusHeight.get(currentRegion.y);
+        List<QuadtreeRegion> downNeighbours = finalMapRegionsByYPlusHeight.get(currentRegion.y - 1);
+        List<QuadtreeRegion> down = fuse(downReg, downNeighbours);
+        //System.out.println("downReg: " + currentRegion.y + " finalY+Height : " + (currentRegion.y -1));
+        if (down != null) {
+            down.forEach((r) -> {
+                int rwidth = width / r.divisionFactor;
+                if (r.x <= currentRegion.x + currentWidth && r.x + rwidth >= currentRegion.x) {
+                    adj.add(r);
+                }
+            });
+        }
+        //System.out.println("Adjacents: " + adj.size());
         return adj;
     }
 
@@ -229,6 +246,8 @@ public class Quadtree {
                 Quadtree.regionId += 1;
                 int regwidth = world.width / reg.divisionFactor;
                 int regheight = world.height / reg.divisionFactor;
+                System.out.println("Region id=" + reg.id + " width=" + regwidth 
+                    + " height=" + regheight + " x=" + reg.x + " y=" + reg.y);
                 ArrayList<QuadtreeRegion> regionsByX = mapRegionsByX.get(reg.x);
                 ArrayList<QuadtreeRegion> regionsByY = mapRegionsByY.get(reg.y);
                 ArrayList<QuadtreeRegion> regionsByXPlusWidth = mapRegionsByXPlusWidth.get(reg.x + regwidth);
@@ -277,6 +296,19 @@ public class Quadtree {
                     }
                 }
             }
+    }
+
+    private static List<QuadtreeRegion> fuse(List<QuadtreeRegion> list1, List<QuadtreeRegion> list2) {
+        List<QuadtreeRegion> newlist = new ArrayList<>();
+        if (list1 == null) {
+            return list2;
+        }
+        if (list2 == null) {
+            return list1;
+        }
+        newlist.addAll(list1);
+        newlist.addAll(list2);
+        return newlist;
     }
 
     public static class QuadtreeRegion {
