@@ -15,6 +15,8 @@ public class AStarAlgorithm implements Algorithme {
     Point pointArrivee;
     ArrayList<Integer> grille = new ArrayList<>();
 
+    protected Map<Integer, Integer> pred = new HashMap<>();
+
     public AStarAlgorithm(List<Point> pointsSelectionnes, List<Point> obstacles, int lignes, int colonnes) {
         this.obstacles = obstacles;
         this.colonnes = colonnes;
@@ -126,7 +128,6 @@ public class AStarAlgorithm implements Algorithme {
 
         PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingDouble(n -> n.fScore));
         Map<Integer, Double> gScore = new HashMap<>();
-        Map<Integer, Integer> pred = new HashMap<>();
         Set<Integer> closedSet = new HashSet<>();
 
         gScore.put(indexDepart, 0.0);
@@ -161,6 +162,7 @@ public class AStarAlgorithm implements Algorithme {
             }
         }
 
+        System.out.println("Pas de chemin trouvé");
         return new ArrayList<>();
     }
 }
