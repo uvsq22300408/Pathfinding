@@ -1,7 +1,7 @@
 package org.example;
 
 import org.example.view.MainWindow;
-import org.example.view.grille2D.GrillePathfinding;
+import org.example.view.Grille2D.GrillePathfinding;
 
 import java.util.Arrays;
 

@@ -12,6 +12,7 @@ import org.example.world.SaveWorld;
 import org.example.world.LoadWorld;
 import org.example.world.RandomWorld;
 import org.example.world.examples.Astar;
+import org.example.world.examples.AstarGrid;
 import org.example.world.examples.Dijkstra;
 import org.example.world.examples.Quadtree;
 
@@ -45,7 +46,7 @@ public class Benchmark {
             //... Astar
             System.out.println("running astar");
             before = Instant.now();
-            double longueurAst = Astar.astar(world);
+            double longueurAst = AstarGrid.astar(world);
             after = Instant.now();
             timeElapsed = Duration.between(before, after).toMillis();
             if (longueurAst <= 0) {

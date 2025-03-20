@@ -1,9 +1,6 @@
 package org.example.world.examples;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -11,7 +8,6 @@ import java.util.Set;
 
 import org.example.world.*;
 import org.example.world.World.Obstacle;
-import org.example.world.World.Region;
 
 public class Quadtree {
     public static double Infinity = -1;
@@ -256,8 +252,8 @@ public class Quadtree {
                 Quadtree.regionId += 1;
                 int regwidth = world.width / reg.divisionFactor;
                 int regheight = world.height / reg.divisionFactor;
-                System.out.println("Region id=" + reg.id + " width=" + regwidth 
-                   + " height=" + regheight + " x=" + reg.x + " y=" + reg.y);
+                //System.out.println("Region id=" + reg.id + " width=" + regwidth 
+                //   + " height=" + regheight + " x=" + reg.x + " y=" + reg.y);
                 ArrayList<QuadtreeRegion> regionsByX = mapRegionsByX.get(reg.x);
                 ArrayList<QuadtreeRegion> regionsByY = mapRegionsByY.get(reg.y);
                 ArrayList<QuadtreeRegion> regionsByXPlusWidth = mapRegionsByXPlusWidth.get(reg.x + regwidth);

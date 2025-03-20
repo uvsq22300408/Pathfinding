@@ -40,6 +40,7 @@ import java.time.Instant;
 import javax.swing.Timer;
 
 import org.example.world.examples.Astar;
+import org.example.world.examples.AstarGrid;
 import org.example.world.examples.Dijkstra;
 import org.example.world.examples.Quadtree;
 import org.example.world.LoadWorld;
@@ -87,8 +88,8 @@ public class MainWindow {
                 case "draw-astar": {
                     if (args.length > 1) {
                         World world = LoadWorld.loadWorld(args[1]);
-                        double longueur = Astar.astar(world);
-                        main_draw(world, longueur);
+                        double longueur = AstarGrid.astar(world);
+                        DrawAstar.drawAstar(world);
                     } else {
                         System.out.println("Un nom de graphe dans app/benchmark est requis.");
                     }
