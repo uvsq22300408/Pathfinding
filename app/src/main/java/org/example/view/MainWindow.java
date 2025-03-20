@@ -42,6 +42,7 @@ import javax.swing.Timer;
 import org.example.world.examples.Astar;
 import org.example.world.examples.AstarGrid;
 import org.example.world.examples.Dijkstra;
+import org.example.world.examples.JPSGrid;
 import org.example.world.examples.Quadtree;
 import org.example.world.LoadWorld;
 import org.example.world.RandomWorld;
@@ -89,6 +90,16 @@ public class MainWindow {
                     if (args.length > 1) {
                         World world = LoadWorld.loadWorld(args[1]);
                         double longueur = AstarGrid.astar(world);
+                        DrawAstar.drawAstar(world);
+                    } else {
+                        System.out.println("Un nom de graphe dans app/benchmark est requis.");
+                    }
+                }
+                break;
+                case "draw-jps": {
+                    if (args.length > 1) {
+                        World world = LoadWorld.loadWorld(args[1]);
+                        double longueur = JPSGrid.JPS(world);
                         DrawAstar.drawAstar(world);
                     } else {
                         System.out.println("Un nom de graphe dans app/benchmark est requis.");

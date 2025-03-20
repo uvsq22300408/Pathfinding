@@ -14,6 +14,7 @@ import org.example.world.RandomWorld;
 import org.example.world.examples.Astar;
 import org.example.world.examples.AstarGrid;
 import org.example.world.examples.Dijkstra;
+import org.example.world.examples.JPSGrid;
 import org.example.world.examples.Quadtree;
 
 public class Benchmark {
@@ -26,7 +27,7 @@ public class Benchmark {
         File[] graphes = dossier.listFiles();
         int nbGraphes = graphes.length;
         // Ajouter les autres algorithmes
-        writer.write("nomGraphe,DijkstraLength,DijkstraTimeMs,AstarLength,AstarTimeMs,QuadtreeLength,QuadtreeTimeMs\n");
+        writer.write("nomGraphe,DijkstraLength,DijkstraTimeMs,AstarLength,AstarTimeMs,QuadtreeLength,QuadtreeTimeMs,JPSLength,JPSTimeMs\n");
         for (int gx = 0; gx < nbGraphes; gx++) {
             System.out.println("opening: " + graphes[gx].getName());
             World world = LoadWorld.loadWorld(graphes[gx].getName());
@@ -45,9 +46,9 @@ public class Benchmark {
             // Autres algos
             //... Astar
             System.out.println("running astar");
-            before = Instant.now();
-            double longueurAst = AstarGrid.astar(world);
-            after = Instant.now();
+            
+            timeElapsed = AstarGrid.benchmark(world);
+            double longueurAst = AstarGrid.distanceForBenchmark;
             timeElapsed = Duration.between(before, after).toMillis();
             if (longueurAst <= 0) {
                 writer.write("-1,"); // => Pas de chemin
@@ -69,8 +70,24 @@ public class Benchmark {
             }
             writer.write(timeElapsed + ",");
             // Autres algos
-            // ...
-            System.out.println("quadtree ended");
+            // ... JPS
+            System.out.println("running JPS");
+            // 
+            if ((world.width * world.height) / (world.tailleReg * world.tailleReg) <= 1000) {
+                before = Instant.now();
+                double longueurJPS = JPSGrid.JPS(world);
+                after = Instant.now();
+                timeElapsed = Duration.between(before, after).toMillis();
+                if (longueurQuadtree <= 0) {
+                    writer.write("-1,"); // => Pas de chemin
+                } else {
+                    writer.write(longueurJPS + ",");
+                }
+                writer.write(timeElapsed + ",");
+            } else {
+                writer.write("SKIP,0");
+                System.out.println("Skipping JPS for now because graph is too big");
+            }
             writer.write("\n");
             writer.flush();
         }

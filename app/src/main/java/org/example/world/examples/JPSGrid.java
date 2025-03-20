@@ -1,11 +1,5 @@
 package org.example.world.examples;
 
-import org.example.algo.AStarAlgorithm;
-import org.example.world.World;
-
-import java.awt.Point;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,26 +9,17 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-// Convert world as grid and run Astar
-public class AstarGrid extends AStarAlgorithm{
-    public static double astar(World world) {
-        AstarGrid ag = init(world);
-        AstarGrid.cheminFinal = ag.calculChemin();
+import org.example.algo.JPS;
+import org.example.world.World;
+import java.awt.Point;
+
+public class JPSGrid extends JPS {
+    public static double JPS(World world) {
+        JPSGrid ag = init(world);
+        JPSGrid.cheminFinal = ag.calculChemin();
         return ag.distance * world.tailleReg;
     }
-
-    public static long benchmark(World world) {
-        AstarGrid.distanceForBenchmark = 0;
-        AstarGrid ag = init(world);
-        Instant before = Instant.now();
-        AstarGrid.cheminFinal = ag.calculChemin();
-        AstarGrid.distanceForBenchmark = ag.distance * world.tailleReg;
-        Instant after = Instant.now();
-        long timeElapsed = Duration.between(before, after).toMillis();
-        return timeElapsed;
-    }
-
-    public static AstarGrid init(World world) {
+    public static JPSGrid init(World world) {
         Point start = new Point(( ((int)world.start.x) / world.tailleReg),
              ((int)world.start.y) / world.tailleReg);
         Point dest = new Point(( ((int)world.destination.x) / world.tailleReg),
@@ -53,12 +38,12 @@ public class AstarGrid extends AStarAlgorithm{
         int indexArrivee = dest.x * colonnes + dest.y;
         Point pointDepart = start;
         Point pointArrivee = dest;
-        return new AstarGrid(pointsSelectionnes, obstacles, lignes, colonnes,
+        return new JPSGrid(pointsSelectionnes, obstacles, lignes, colonnes,
             indexDepart, indexArrivee, pointDepart, pointArrivee);
     }
 
-    public AstarGrid(List<Point> _points, List<Point> _obstacles, int _lignes, int _colonnes,
-        int indexDepart, int indexArrivee, Point pointDepart, Point pointArrivee) {
+    public JPSGrid(List<Point> _points, List<Point> _obstacles, int _lignes, int _colonnes,
+    int indexDepart, int indexArrivee, Point pointDepart, Point pointArrivee) {
         super(_points, _obstacles, _lignes, _colonnes);
         this.indexDepart = indexDepart;
         this.indexArrivee = indexArrivee;
@@ -66,17 +51,6 @@ public class AstarGrid extends AStarAlgorithm{
         this.pointArrivee = pointArrivee;
     }
 
-    static class Node {
-        int index;
-        double fScore;
-
-        Node(int index, double fScore) {
-            this.index = index;
-            this.fScore = fScore;
-        }
-    }
-
-    // Stock path length
     @Override
     public ArrayList<Point> calculChemin() {
         initialise();
@@ -117,9 +91,18 @@ public class AstarGrid extends AStarAlgorithm{
                 }
             }
         }
-
         System.out.println("Pas de chemin trouvé");
         return new ArrayList<>();
+    }
+
+    static class Node {
+        int index;
+        double fScore;
+
+        Node(int index, double fScore) {
+            this.index = index;
+            this.fScore = fScore;
+        }
     }
 
     private int indexDepart;
@@ -127,6 +110,5 @@ public class AstarGrid extends AStarAlgorithm{
     private Point pointDepart;
     private Point pointArrivee;
     public double distance;
-    public static double distanceForBenchmark;
     public static List<Point> cheminFinal;
 }

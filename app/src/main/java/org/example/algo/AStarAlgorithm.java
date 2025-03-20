@@ -85,6 +85,7 @@ public class AStarAlgorithm implements Algorithme {
     }
 
     protected void initialise() {
+        pred.clear();
         for (int i = 0; i < lignes * colonnes; i++) {
             grille.add(0);
         }
