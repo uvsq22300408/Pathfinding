@@ -49,7 +49,6 @@ public class Benchmark {
             
             timeElapsed = AstarGrid.benchmark(world);
             double longueurAst = AstarGrid.distanceForBenchmark;
-            timeElapsed = Duration.between(before, after).toMillis();
             if (longueurAst <= 0) {
                 writer.write("-1,"); // => Pas de chemin
             } else {
