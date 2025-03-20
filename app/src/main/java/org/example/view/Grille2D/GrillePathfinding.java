@@ -1,4 +1,4 @@
-package org.example.view.grille2D;
+package org.example.view.Grille2D;
 
 import javax.swing.*;
 
@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GrillePathfinding extends JFrame {
-    private static final int LIGNES = 15; // Nombre de lignes
-    private static final int COLONNES = 15; // Nombre de colonnes
+    private static final int LIGNES = 30; // Nombre de lignes
+    private static final int COLONNES = 30; // Nombre de colonnes
     private final CasePanel[][] cases = new CasePanel[LIGNES][COLONNES]; // Boutons de la grille
     private final List<Point> pointsSelectionnes = new ArrayList<>(); // Points sélectionnés (départ/arrivée)
     private final List<Point> obstacles = new ArrayList<>(); // Obstacles
