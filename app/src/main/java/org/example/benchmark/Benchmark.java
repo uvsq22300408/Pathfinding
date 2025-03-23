@@ -19,6 +19,13 @@ import org.example.world.examples.Quadtree;
 
 public class Benchmark {
     public static void benchmarkall() {
+        
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         try {
             Path file = Path.of("benchmark-results.csv");
         BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile(),
@@ -72,7 +79,7 @@ public class Benchmark {
             // ... JPS
             System.out.println("running JPS");
             // 
-            if ((world.width * world.height) / (world.tailleReg * world.tailleReg) <= 1000) {
+            if ((world.width * world.height) / (world.tailleReg * world.tailleReg) <= 100000000) {
                 before = Instant.now();
                 double longueurJPS = JPSGrid.JPS(world);
                 after = Instant.now();

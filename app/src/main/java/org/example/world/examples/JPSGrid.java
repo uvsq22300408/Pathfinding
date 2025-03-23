@@ -53,46 +53,57 @@ public class JPSGrid extends JPS {
 
     @Override
     public ArrayList<Point> calculChemin() {
-        initialise();
-
-        PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingDouble(n -> n.fScore));
-        Map<Integer, Double> gScore = new HashMap<>();
-        Set<Integer> closedSet = new HashSet<>();
-
-        gScore.put(indexDepart, 0.0);
-        openSet.add(new Node(indexDepart, heuristique(indexDepart)));
-
-        while (!openSet.isEmpty()) {
-            Node currentNode = openSet.poll();
-            int current = currentNode.index;
-
-            if (current == indexArrivee) {
-                ArrayList<Point> chemin = cheminPoints(pred);
-                this.distance = gScore.get(indexArrivee);
-                System.out.println("Distance de (" + pointDepart.x + ", " + pointDepart.y + ") vers (" + pointArrivee.x
-                        + ", " + pointArrivee.y + ") : " + gScore.get(indexArrivee));
-                return chemin;
-            }
-
-            closedSet.add(current);
-
-            for (int voisin : getIndexVoisins(current)) {
-                if (closedSet.contains(voisin))
-                    continue;
-
-                double tentativeGScore = gScore.getOrDefault(current, Double.MAX_VALUE) + getDist(current, voisin);
-
-                if (tentativeGScore < gScore.getOrDefault(voisin, Double.MAX_VALUE)) {
-                    pred.put(voisin, current);
-                    gScore.put(voisin, tentativeGScore);
-
-                    openSet.removeIf(node -> node.index == voisin);
-                    openSet.add(new Node(voisin, tentativeGScore + heuristique(voisin)));
-                }
-            }
-        }
-        System.out.println("Pas de chemin trouvé");
-        return new ArrayList<>();
+      initialise();
+      PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingDouble(n -> n.fScore));
+      Map<Integer, Double> gScore = new HashMap<>();
+      Set<Integer> closedSet = new HashSet<>();
+      
+      gScore.put(indexDepart, 0.0);
+      openSet.add(new Node(indexDepart, heuristique(indexDepart)));
+      
+      while (!openSet.isEmpty()) {
+          Node currentNode = openSet.poll();
+          int current = currentNode.index;
+          
+          if (current == indexArrivee) {
+              System.out.println("Distance : " + gScore.get(indexArrivee));
+              return cheminPoints(pred);
+          }
+          
+          if (closedSet.contains(current)) {
+              continue;
+          }
+          
+          closedSet.add(current);
+          
+          // Debug information
+          System.out.println("Exploring node: " + current);
+          
+          ArrayList<Integer> jumpPoints = getIndexVoisins(current);
+          System.out.println("Found jump points: " + jumpPoints);
+          
+          for (int jumpPoint : jumpPoints) {
+              if (closedSet.contains(jumpPoint)) {
+                  continue;
+              }
+              
+              double newGScore = gScore.get(current) + getDist(current, jumpPoint);
+              
+              if (newGScore < gScore.getOrDefault(jumpPoint, Double.POSITIVE_INFINITY)) {
+                  pred.put(jumpPoint, current);
+                  gScore.put(jumpPoint, newGScore);
+                  
+                  // Remove existing node if present
+                  openSet.removeIf(node -> node.index == jumpPoint);
+                  openSet.add(new Node(jumpPoint, newGScore + heuristique(jumpPoint)));
+                  
+                  System.out.println("Updated node: " + jumpPoint + " with gScore: " + newGScore);
+              }
+          }
+      }
+      
+      System.out.println("Pas de chemin trouvé");
+      return new ArrayList<>();
     }
 
     static class Node {
