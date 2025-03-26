@@ -66,7 +66,9 @@ public class JPSGrid extends JPS {
           int current = currentNode.index;
           
           if (current == indexArrivee) {
-              System.out.println("Distance : " + gScore.get(indexArrivee));
+              double d = gScore.get(indexArrivee);
+              System.out.println("Distance : " + d);
+              this.distance = d;
               return cheminPoints(pred);
           }
           
