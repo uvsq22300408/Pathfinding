@@ -19,13 +19,6 @@ import org.example.world.examples.Quadtree;
 
 public class Benchmark {
     public static void benchmarkall() {
-        
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         try {
             Path file = Path.of("benchmark-results.csv");
         BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile(),
@@ -40,13 +33,14 @@ public class Benchmark {
         for (int gx = 0; gx < nbGraphes; gx++) {
             System.out.println("opening: " + graphes[gx].getName());
             World world = LoadWorld.loadWorld(graphes[gx].getName());
+            writer.write(graphes[gx].getName() + ",");
             // ============== DIJKSTRA
             /**System.out.println("running dijkstra");
             Instant before = Instant.now();
             double longueurDij = Dijkstra.dijkstra(world);
             Instant after = Instant.now();
             long timeElapsed = Duration.between(before, after).toMillis();
-            writer.write(graphes[gx].getName() + ",");
+            
             if (longueurDij <= 0) {
                 writer.write("-1,"); // => Pas de chemin
             } else {
@@ -54,7 +48,7 @@ public class Benchmark {
             }
             writer.write(timeElapsed + ","); */
             // Autres algos
-            //... Astar
+            // =============== Astar
             System.out.println("running astar");
             long timeElapsed = AstarGrid.benchmark(world);
             double longueurAst = AstarGrid.distanceForBenchmark;
@@ -65,7 +59,7 @@ public class Benchmark {
             }
             writer.write(timeElapsed + ",");
             // Autres algos
-            // ... Quadtree
+            // =================== Quadtree
             System.out.println("running quadtree");
             Instant before = Instant.now();
             double longueurQuadtree = Quadtree.quadtree(world);
@@ -78,7 +72,7 @@ public class Benchmark {
             }
             writer.write(timeElapsed + ",");
             // Autres algos
-            // ... JPS
+            // ======================= JPS
             System.out.println("running JPS");
             // (world.width * world.height) / (world.tailleReg * world.tailleReg) <= 100000000
             if (true) {
