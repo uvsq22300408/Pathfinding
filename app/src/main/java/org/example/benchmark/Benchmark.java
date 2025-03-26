@@ -34,11 +34,14 @@ public class Benchmark {
         File[] graphes = dossier.listFiles();
         int nbGraphes = graphes.length;
         // Ajouter les autres algorithmes
-        writer.write("nomGraphe,DijkstraLength,DijkstraTimeMs,AstarLength,AstarTimeMs,QuadtreeLength,QuadtreeTimeMs,JPSLength,JPSTimeMs\n");
+
+        // Dijkstra : ,DijkstraLength,DijkstraTimeMs
+        writer.write("nomGraphe,AstarLength,AstarTimeMs,QuadtreeLength,QuadtreeTimeMs,JPSLength,JPSTimeMs\n");
         for (int gx = 0; gx < nbGraphes; gx++) {
             System.out.println("opening: " + graphes[gx].getName());
             World world = LoadWorld.loadWorld(graphes[gx].getName());
-            System.out.println("running dijkstra");
+            // ============== DIJKSTRA
+            /**System.out.println("running dijkstra");
             Instant before = Instant.now();
             double longueurDij = Dijkstra.dijkstra(world);
             Instant after = Instant.now();
@@ -49,12 +52,11 @@ public class Benchmark {
             } else {
                 writer.write(longueurDij + ",");
             }
-            writer.write(timeElapsed + ",");
+            writer.write(timeElapsed + ","); */
             // Autres algos
             //... Astar
             System.out.println("running astar");
-            
-            timeElapsed = AstarGrid.benchmark(world);
+            long timeElapsed = AstarGrid.benchmark(world);
             double longueurAst = AstarGrid.distanceForBenchmark;
             if (longueurAst <= 0) {
                 writer.write("-1,"); // => Pas de chemin
@@ -65,9 +67,9 @@ public class Benchmark {
             // Autres algos
             // ... Quadtree
             System.out.println("running quadtree");
-            before = Instant.now();
+            Instant before = Instant.now();
             double longueurQuadtree = Quadtree.quadtree(world);
-            after = Instant.now();
+            Instant after = Instant.now();
             timeElapsed = Duration.between(before, after).toMillis();
             if (longueurQuadtree <= 0) {
                 writer.write("-1,"); // => Pas de chemin
@@ -78,8 +80,8 @@ public class Benchmark {
             // Autres algos
             // ... JPS
             System.out.println("running JPS");
-            // 
-            if ((world.width * world.height) / (world.tailleReg * world.tailleReg) <= 100000000) {
+            // (world.width * world.height) / (world.tailleReg * world.tailleReg) <= 100000000
+            if (true) {
                 before = Instant.now();
                 double longueurJPS = JPSGrid.JPS(world);
                 after = Instant.now();
@@ -90,9 +92,6 @@ public class Benchmark {
                     writer.write(longueurJPS + ",");
                 }
                 writer.write(timeElapsed + ",");
-            } else {
-                writer.write("SKIP,0");
-                System.out.println("Skipping JPS for now because graph is too big");
             }
             writer.write("\n");
             writer.flush();
