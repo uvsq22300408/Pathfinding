@@ -45,6 +45,13 @@ public class Main {
         System.out.println("  draw-astar GRAPHNAME : execute A* on GRAPHNAME from app/benchmarks/");
         System.out.println("  draw-dijkstra GRAPHNAME : execute dijkstra on GRAPHNAME from app/benchmarks/");
         System.out.println("  draw-quadtree GRAPHNAME : execute quadtree on GRAPHNAME from app/benchmarks/");
+        System.out.println("  === Benchmark3D");
+        System.out.println("  benchmark-generate3d: generate random graphs in benchmark folder");
+        System.out.println("  benchmark-run3d: Run all algorithms against the graphs in app/benchmark/");
+        System.out.println("  === Draw Algorithm");
+        System.out.println("  draw-astar3d GRAPHLOCATION : execute A* on GRAPHLOCATION");
+        System.out.println("  draw-dijkstra3d GRAPHLOCATION : execute dijkstra on GRAPHLOCATION");
+        System.out.println("  draw-quadtree3d GRAPHLOCATION : execute quadtree on GRAPHLOCATION");
         System.out.println(" OPTIONS GRILLE:");
         System.out.println(" OPTIONS SANS_GRILLE:");
     }

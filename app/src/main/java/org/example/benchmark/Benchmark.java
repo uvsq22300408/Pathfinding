@@ -34,20 +34,6 @@ public class Benchmark {
             System.out.println("opening: " + graphes[gx].getName());
             World world = LoadWorld.loadWorld(graphes[gx].getName());
             writer.write(graphes[gx].getName() + ",");
-            // ============== DIJKSTRA
-            /**System.out.println("running dijkstra");
-            Instant before = Instant.now();
-            double longueurDij = Dijkstra.dijkstra(world);
-            Instant after = Instant.now();
-            long timeElapsed = Duration.between(before, after).toMillis();
-            
-            if (longueurDij <= 0) {
-                writer.write("-1,"); // => Pas de chemin
-            } else {
-                writer.write(longueurDij + ",");
-            }
-            writer.write(timeElapsed + ","); */
-            // Autres algos
             // =============== Astar
             System.out.println("running astar");
             long timeElapsed = AstarGrid.benchmark(world);
