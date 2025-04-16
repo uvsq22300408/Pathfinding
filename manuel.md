@@ -1,16 +1,14 @@
 # Compilation
 
-Pour télécharger les dépendences :
-./gradlew install
-gradle install
+Pour télécharger les dépendences et compiler:
+./gradlew install OU gradle install
 
-Pour compiler :
-./gradlew build
-gradle build
+La commande créé un exécutable appelé 'app' dans le dossier app/build/install/app/bin.
 
 Pour exécuter :
-./gradlew run --args "[program] [options]" (voir section 'Usage et options')
-gradle run --args "[program] [options]" (voir section 'Usage et options')
+./app/build/install/app/bin/app [program] [options] 
+
+(voir section 'Usage et options') pour les choix possibles.
 
 # Usage et options
 usage: [program] [options]
@@ -23,22 +21,30 @@ PROGRAM :
 
 OPTIONS WORLD:
 
-- benchmark-generate: generate random graphs in benchmark folder
+## BENCHMARK
+- benchmark-generate: generate random 2D graphs
 
-- benchmark-run: Run all algorithms against the graphs in app/benchmark/
+- benchmark-run: Run all algorithms against 2D graphs
 
-- draw-astar GRAPHNAME : execute A* on GRAPHNAME from app/benchmarks/
+- benchmark-generate3d: generate random 3D graphs
 
-- draw-dijkstra GRAPHNAME : execute dijkstra on GRAPHNAME from app/benchmarks/
+- benchmark-run3d: Run all algorithms against 3D graphs
 
-- draw-quadtree GRAPHNAME : execute quadtree on GRAPHNAME from app/benchmarks/
+## DRAW
+- draw-astar GRAPHLOCATION : execute A* on GRAPHLOCATION
+
+- draw-astar3d GRAPHLOCATION : execute A* on GRAPHLOCATION
+
+- draw-dijkstra GRAPHLOCATION : execute dijkstra on GRAPHLOCATION
+
+- draw-quadtree GRAPHLOCATION : execute quadtree on GRAPHLOCATION
 
 OPTIONS GRILLE:
 
 OPTIONS SANS_GRILLE:
 
 exemple : 
-- Pour générer les graphes du benchmark :
-	./gradlew run --args "world benchmark-generate"
+- Pour générer les graphes 2D du benchmark :
+	./app/build/install/app/bin/app world benchmark-generate
 - Pour générer les résultats du benchmark :
-	./gradlew run --args "world benchmark-run"
+	./app/build/install/app/bin/app world benchmark-generate
