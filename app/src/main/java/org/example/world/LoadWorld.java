@@ -17,7 +17,7 @@ public class LoadWorld {
             int tr = 0;
             World.Point start = new World.Point(0, 0);
             World.Point destination = new World.Point(0, 0);
-            List<String> lines = Files.readAllLines(Path.of(SaveWorld.SAVE_LOCATION + filename));
+            List<String> lines = Files.readAllLines(Path.of(filename));
             for (String l : lines) {
                 String[] fields_and_values = l.strip().split(":");
                 String attribute = fields_and_values[0];

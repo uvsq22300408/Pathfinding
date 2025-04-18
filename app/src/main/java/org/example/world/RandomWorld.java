@@ -4,10 +4,34 @@ import java.util.Iterator;
 import java.util.Random;
 
 import org.example.world.World.ERegionType;
+import org.example.world3D.World3D;
 
 public class RandomWorld {
     public final static int SEED = 10;
-    public static World randomWorld(int width, int height, int nbObstacles, int taille_region) {
+
+public static World randomWorld(int w, int h, int nbObstacles, int obstacleRadius,
+        int tailleRegion) {
+            // Generate start
+            Random rng = new Random(88);
+            int startx = 0;
+            int starty = rng.nextInt(h);
+            World.Point start = new World.Point(startx, starty);
+            // Generate destination
+            int destx = w - 1;
+            int desty = rng.nextInt(h);
+            World.Point destination = new World.Point(destx, desty);
+            World world = new World(w, h, World.ERegionType.OCTILE, start, destination,
+                 tailleRegion);
+            // Generate obstacles
+            for (int obsi = 0; obsi < nbObstacles; obsi++) {
+                int obsx = rng.nextInt(w - 2 * tailleRegion) + tailleRegion;
+                int obsy = rng.nextInt(h - 2 * tailleRegion) + tailleRegion;
+                world.addObstacle(obsx, obsy, obstacleRadius);
+            }
+            return world;
+    }
+
+    public static World oldRandomWorld(int width, int height, int nbObstacles, int taille_region) {
         Random rng = new Random(SEED);
         // Place start in first column
         int startx = 0;

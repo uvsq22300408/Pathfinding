@@ -8,15 +8,15 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 
 public class SaveWorld {
-    public final static String SAVE_LOCATION = "./benchmark/";
-    public static void saveWorld(World world, String filename) {
+    //public final static String SAVE_LOCATION = "./benchmark/";
+    public static void saveWorld(World world, String filename, String SAVE_LOCATION) {
         try {
             // If folder does not exist create it
             Path dossier = Paths.get(SAVE_LOCATION);
             if (!Files.exists(dossier)) {
                 Files.createDirectories(dossier);
             }
-            Path file = Path.of(SAVE_LOCATION + filename);
+            Path file = Path.of(SAVE_LOCATION + "/" + filename);
             BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile(), false));
             writer.write("width:" + world.width + "\n");
             writer.write("height:" + world.height + "\n");
