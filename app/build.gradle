@@ -37,7 +37,6 @@ application {
     // Define the main class for the application.
     //mainClass = 'org.example.view.GrillePathfinding'
     mainClass = 'org.example.Main'
-
 }
 
 tasks.named('test') {

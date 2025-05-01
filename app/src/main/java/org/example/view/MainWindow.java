@@ -56,6 +56,7 @@ import org.example.world.examples.AstarGrid;
 import org.example.world.examples.Dijkstra;
 import org.example.world.examples.JPSGrid;
 import org.example.world.examples.Quadtree;
+import org.example.world.examples.Quadtree3D;
 import org.example.world3D.LoadWorld3D;
 import org.example.world3D.World3D;
 import org.example.world3D.World3D.Region3D;
@@ -133,6 +134,12 @@ public class MainWindow {
                     World3D world = LoadWorld3D.loadWorld(args[1]);
                     Astar3D.astar(world);
                     DrawAstar3D.drawAstar3D(world);
+                }
+                break;
+                case "draw-quadtree3d": {
+                    World3D world = LoadWorld3D.loadWorld(args[1]);
+                    Quadtree3D.quadtree(world);
+                    DrawQuadtree3D.drawQuadtree3D(world);
                 }
                 break;
                 default:
