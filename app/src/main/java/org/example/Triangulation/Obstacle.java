@@ -1,3 +1,5 @@
+package org.example.Triangulation;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,17 @@ public class Obstacle {
         this.vertices = generateOctagon(x, y, size);
     }
 
-    private List<Point> generateOctagon(int x, int y, int size) {
+    public Obstacle(List<Point> vertices) {
+        this.vertices = vertices;
+    }
+
+    // Create an obstacle with a specified position
+    public static Obstacle fixedObstacle(int x, int y, int size) {
+        List<Point> vertices = generateOctagon(x, y, size);
+        return new Obstacle(vertices);
+    }
+
+    private static List<Point> generateOctagon(int x, int y, int size) {
         List<Point> points = new ArrayList<>();
         int offset = size / 3; // Permet de donner une forme plus équilibrée
 

@@ -1,3 +1,5 @@
+package org.example.Triangulation;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,6 +89,17 @@ public class Triangle {
         return Math.abs((p1.x * (p2.y - p3.y) +
                 p2.x * (p3.y - p1.y) +
                 p3.x * (p1.y - p2.y)) / 2.0);
+    }
+
+    public List<Point> getPoints() {
+        Point a = new Point(this.a);
+        Point b = new Point(this.b);
+        Point c = new Point(this.c);
+        List<Point> points = new ArrayList<>();
+        points.add(a);
+        points.add(b);
+        points.add(c);
+        return points;
     }
 
 }

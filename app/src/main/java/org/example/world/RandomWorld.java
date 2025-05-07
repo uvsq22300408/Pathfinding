@@ -1,5 +1,6 @@
 package org.example.world;
 
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -12,7 +13,7 @@ public class RandomWorld {
 public static World randomWorld(int w, int h, int nbObstacles, int obstacleRadius,
         int tailleRegion) {
             // Generate start
-            Random rng = new Random(88);
+            Random rng = new Random(Instant.now().toEpochMilli());
             int startx = 0;
             int starty = rng.nextInt(h);
             World.Point start = new World.Point(startx, starty);

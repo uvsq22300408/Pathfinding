@@ -45,7 +45,8 @@ public class Benchmark {
         // Ajouter les autres algorithmes
 
         // Dijkstra : ,DijkstraLength,DijkstraTimeMs
-        writer.write("nomGraphe,AstarLength,AstarTime,QuadtreeLength,QuadtreeTime,JPSLength,JPSTime\n");
+        writer.write("nomGraphe,AstarLength,AstarTime,QuadtreeLength,QuadtreeTime," + 
+            "JPSLength,JPSTime,TriangulationLength,TriangulationTime\n");
         for (int gx = 0; gx < nbGraphes; gx++) {
             System.out.println("opening: " + graphsPath + "/" + graphes[gx].getName());
             World world = LoadWorld.loadWorld(graphsPath + "/" + graphes[gx].getName());
@@ -77,18 +78,26 @@ public class Benchmark {
             // ======================= JPS
             System.out.println("running JPS");
             // (world.width * world.height) / (world.tailleReg * world.tailleReg) <= 100000000
-            if (true) {
-                before = Instant.now();
-                double longueurJPS = JPSGrid.JPS(world);
-                after = Instant.now();
-                timeElapsed = Duration.between(before, after).toMillis();
-                if (longueurQuadtree <= 0) {
-                    writer.write("-1,"); // => Pas de chemin
-                } else {
-                    writer.write(longueurJPS + ",");
-                }
-                writer.write(timeElapsed + ",");
+            before = Instant.now();
+            double longueurJPS = JPSGrid.JPS(world);
+            after = Instant.now();
+            timeElapsed = Duration.between(before, after).toMillis();
+            if (longueurQuadtree <= 0) {
+                writer.write("-1,"); // => Pas de chemin
+            } else {
+                writer.write(longueurJPS + ",");
             }
+            writer.write(timeElapsed + ",");
+            // ======================= Triangulation
+            System.out.println("running Triangulation");
+            timeElapsed = benchmarkTriangulation.benchmark(world, 5);
+            double longueurTriangulation = benchmarkTriangulation.pathLength;
+            if (longueurTriangulation <= 0) {
+                writer.write("-1,"); // => Pas de chemin
+            } else {
+                writer.write(longueurTriangulation + ",");
+            }
+            writer.write(timeElapsed + ",");
             writer.write("\n");
             writer.flush();
         }

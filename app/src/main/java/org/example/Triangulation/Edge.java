@@ -1,3 +1,4 @@
+package org.example.Triangulation;
 import java.awt.Point;
 
 public class Edge {

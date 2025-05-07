@@ -45,6 +45,7 @@ public class Main {
         System.out.println("  draw-astar GRAPHNAME : execute A* on GRAPHNAME from app/benchmarks/");
         System.out.println("  draw-dijkstra GRAPHNAME : execute dijkstra on GRAPHNAME from app/benchmarks/");
         System.out.println("  draw-quadtree GRAPHNAME : execute quadtree on GRAPHNAME from app/benchmarks/");
+        System.out.println("  draw-triangulation GRAPHNAME [NUMPOINTS = 5] : execute triangulation on GRAPHNAME with NUMPOINTS numpoints");
         System.out.println("  === Benchmark3D");
         System.out.println("  benchmark-generate3d: generate random graphs in benchmark folder");
         System.out.println("  benchmark-run3d: Run all algorithms against the graphs in app/benchmark/");

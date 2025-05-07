@@ -1,3 +1,5 @@
+package org.example.Triangulation;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
