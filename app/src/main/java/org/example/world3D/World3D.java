@@ -112,7 +112,7 @@ public  class World3D {
                 for (float d = topLeftRegion.z; d <= downRightRegion.z; d += tr) {
                     Region3D obstacle = new Region3D(w, h, d, tr);
                     int id = getRegionId(obstacle);
-                    if (id < info.nbRegion) {
+                    if (id > 0 && id < info.nbRegion) {
                         passThrough[id] = InnerWorld.OBSTACLE;
                     }
                 }

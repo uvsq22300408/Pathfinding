@@ -12,6 +12,7 @@ import java.time.Instant;
 import org.example.Triangulation.DelaunayTriangulation;
 import org.example.Triangulation.Obstacle;
 import org.example.Triangulation.Pathfinding;
+import org.example.Triangulation.Pathfinding_P;
 
 public class benchmarkTriangulation {
     public static List<Obstacle> obstacles;
@@ -60,7 +61,7 @@ public class benchmarkTriangulation {
         triangles.removeIf(benchmarkTriangulation::isTriangleInsideObstacle);
         Point start = new Point(Math.round(world.start.x), Math.round(world.start.y));
         Point end = new Point(Math.round(world.destination.x), Math.round(world.destination.y));
-        List<Point> path = Pathfinding.findPathNoDisplay(start, end, triangles);
+        List<Point> path = Pathfinding_P.findPathNoDisplay(start, end, triangles, obstacles);
 
         int pathLength = 0;
         if (path == null) {

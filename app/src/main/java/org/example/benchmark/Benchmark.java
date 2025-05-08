@@ -26,7 +26,7 @@ public class Benchmark {
     public static void benchmarkall() {
         try {
         Console console = System.console();
-        System.out.println("In what folder are the graphs you want to benchmark ?");
+        System.out.println("In which folder are the graphs you want to benchmark ?");
         String graphsPath = console.readLine();
         File dossier = new File(graphsPath);
         File[] graphes = dossier.listFiles();
@@ -45,14 +45,14 @@ public class Benchmark {
         // Ajouter les autres algorithmes
 
         // Dijkstra : ,DijkstraLength,DijkstraTimeMs
-        writer.write("nomGraphe,AstarLength,AstarTime,QuadtreeLength,QuadtreeTime," + 
-            "JPSLength,JPSTime,TriangulationLength,TriangulationTime\n");
+        writer.write("nomGraphe,nbRegions,nbObstacles,Algorithm,Length,Time\n");
         for (int gx = 0; gx < nbGraphes; gx++) {
             System.out.println("opening: " + graphsPath + "/" + graphes[gx].getName());
             World world = LoadWorld.loadWorld(graphsPath + "/" + graphes[gx].getName());
-            writer.write(graphes[gx].getName() + ",");
             // =============== Astar
             System.out.println("running astar");
+            writer.write(graphes[gx].getName() + "," + world.getNbRegion() + "," + world.obstacles.size() + ",");
+            writer.write("astar,");
             long timeElapsed = AstarGrid.benchmark(world);
             double longueurAst = AstarGrid.distanceForBenchmark;
             if (longueurAst <= 0) {
@@ -60,10 +60,12 @@ public class Benchmark {
             } else {
                 writer.write(longueurAst + ",");
             }
-            writer.write(timeElapsed + ",");
+            writer.write(timeElapsed + "\n");
             // Autres algos
             // =================== Quadtree
             System.out.println("running quadtree");
+            writer.write(graphes[gx].getName() + "," + world.getNbRegion() + "," + world.obstacles.size() + ",");
+            writer.write("quadtree,");
             Instant before = Instant.now();
             double longueurQuadtree = Quadtree.quadtree(world);
             Instant after = Instant.now();
@@ -73,7 +75,7 @@ public class Benchmark {
             } else {
                 writer.write(longueurQuadtree + ",");
             }
-            writer.write(timeElapsed + ",");
+            writer.write(timeElapsed + "\n");
             // Autres algos
             // ======================= JPS
             System.out.println("running JPS");
@@ -82,23 +84,26 @@ public class Benchmark {
             double longueurJPS = JPSGrid.JPS(world);
             after = Instant.now();
             timeElapsed = Duration.between(before, after).toMillis();
-            if (longueurQuadtree <= 0) {
+            writer.write(graphes[gx].getName() + "," + world.getNbRegion() + "," + world.obstacles.size() + ",");
+            writer.write("jps,");
+            if (longueurJPS <= 0) {
                 writer.write("-1,"); // => Pas de chemin
             } else {
                 writer.write(longueurJPS + ",");
             }
-            writer.write(timeElapsed + ",");
+            writer.write(timeElapsed + "\n");
             // ======================= Triangulation
             System.out.println("running Triangulation");
             timeElapsed = benchmarkTriangulation.benchmark(world, 5);
+            writer.write(graphes[gx].getName() + "," + world.getNbRegion() + "," + world.obstacles.size() + ",");
+            writer.write("triangulation,");
             double longueurTriangulation = benchmarkTriangulation.pathLength;
             if (longueurTriangulation <= 0) {
                 writer.write("-1,"); // => Pas de chemin
             } else {
                 writer.write(longueurTriangulation + ",");
             }
-            writer.write(timeElapsed + ",");
-            writer.write("\n");
+            writer.write(timeElapsed + "\n");
             writer.flush();
         }
         writer.close();
@@ -135,7 +140,7 @@ public class Benchmark {
                 SaveWorld.saveWorld(world, "world" + worldi, "./" + saveLocation);
             }
         } catch (Exception e) {
-            System.err.println("benchmarkGenerate3D: [ERROR] : " + e.getMessage());
+            System.err.println("benchmarkGenerate: [ERROR] : " + e.getMessage());
         }
     }
 

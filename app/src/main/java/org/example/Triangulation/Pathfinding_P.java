@@ -199,4 +199,69 @@ public class Pathfinding_P {
     private static double triangleArea(Point a, Point b, Point c) {
         return Math.abs((a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2.0);
     }
+
+    // Trouver le chemin avec A*
+    public static List<Point> findPathNoDisplay(Point start, Point end, List<Triangle> triangles, List<Obstacle> obstacles) {
+        Triangle startTriangle = findContainingTriangle(start, triangles);
+        Triangle endTriangle = findContainingTriangle(end, triangles);
+
+        if (startTriangle == null) {
+            // On prend le triangle le plus proche de start et on s'y déplace
+            double min = -1;
+            for (Triangle t : triangles) {
+                Point centroid = t.getCentroid();
+                double d = centroid.distance(start);
+                if (min == -1 || d < min) {
+                    min = d;
+                    startTriangle = t;
+                }
+            }
+        }
+        if (endTriangle == null) {
+            // On prend le triangle le plus proche de end et on s'y déplace
+            double min = -1;
+            for (Triangle t : triangles) {
+                Point centroid = t.getCentroid();
+                double d = centroid.distance(end);
+                if (min == -1 || d < min) {
+                    min = d;
+                    endTriangle = t;
+                }
+            }
+        }
+
+        PriorityQueue<Node> openSet = new PriorityQueue<>();
+        Set<Triangle> closedSet = new HashSet<>();
+        openSet.add(new Node(startTriangle, null, 0, startTriangle.heuristic(endTriangle)));
+
+        while (!openSet.isEmpty()) {
+            Node current = openSet.poll();
+
+            if (current.triangle == endTriangle) {
+                List<Point> path = reconstructPath(current);
+                path.add(0, start);
+                path.add(end);
+
+                // Étape 2 : Insérer les Steiner Points si nécessaire
+                path = insertSteinerPoints(path, obstacles);
+
+                // Étape 3 : Simplification finale
+                path = simplifyPath(path, obstacles);
+
+                return path;
+            }
+
+            closedSet.add(current.triangle);
+
+            for (Triangle neighbor : findNeighbors(current.triangle, triangles)) {
+                if (closedSet.contains(neighbor)) continue;
+
+                double tentativeG = current.g + current.triangle.distanceTo(neighbor);
+
+                openSet.add(new Node(neighbor, current, tentativeG, neighbor.heuristic(endTriangle)));
+            }
+        }
+
+        return null;
+    }
 }

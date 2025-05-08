@@ -88,15 +88,15 @@ public class DrawAstar3D {
             BeginMode3D(camera);
             ClearBackground(RAYWHITE);
             MainWindow.drawWorld3D(world);
-            MainWindow.drawObstacles3D(world);
             MainWindow.drawPath3D(world);
             for(World3D.Region3D r : obstacleCubes) {
                 Vector3 posi = new Vector3();
                 posi.x(r.x);
                 posi.y(r.y);
                 posi.z(r.z);
-                DrawCube(posi, world.tailleReg, world.tailleReg, world.tailleReg, PURPLE);
+                //DrawCube(posi, world.tailleReg, world.tailleReg, world.tailleReg, PURPLE);
             }
+            MainWindow.drawObstacles3D(world);
             DrawGrid(10, 10);
             EndMode3D();
             EndDrawing();

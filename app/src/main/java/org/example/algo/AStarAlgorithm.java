@@ -91,7 +91,10 @@ public class AStarAlgorithm implements Algorithme {
         }
 
         for (Point p : obstacles) {
-            grille.set(getIndex(p), 3);
+            int index = getIndex(p);
+            if (index < grille.size()) {
+                grille.set(getIndex(p), 3);
+            }
         }
 
         grille.set(indexDepart, 1);

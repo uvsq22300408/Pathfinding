@@ -108,6 +108,9 @@ public class World {
     }
 
     public void addObstacle(float x, float y, float r) {
+        if (x < 0 || y < 0) {
+            System.out.println("World.addObstacle: [ERROR] x ou y < 0");
+        }
         Obstacle ob = new Obstacle(x, y, r);
         obstacles.add(ob);
         // Get corner regions.

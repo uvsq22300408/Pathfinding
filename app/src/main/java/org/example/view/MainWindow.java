@@ -3,6 +3,7 @@ package org.example.view;
 import org.bytedeco.javacpp.Pointer;
 import org.example.benchmark.Benchmark;
 import org.example.benchmark.Benchmark3D;
+import org.example.benchmark.benchmarkTriangulation;
 
 import static com.raylib.Colors.BLACK;
 import static com.raylib.Colors.DARKBLUE;
@@ -69,6 +70,7 @@ import org.example.world.World.Region;
 
 import com.raylib.Raylib.Camera2D;
 import com.raylib.Raylib.Vector2;
+import com.raylib.Raylib.Vector3;
 public class MainWindow {
     
     public static void main(String[] args) {
@@ -116,9 +118,22 @@ public class MainWindow {
                     if (args.length > 1) {
                         World world = LoadWorld.loadWorld(args[1]);
                         double longueur = JPSGrid.JPS(world);
-                        DrawAstar.drawAstar(world);
+                        DrawJPS.drawJPS(world);
                     } else {
                         System.out.println("Un nom de graphe dans app/benchmark est requis.");
+                    }
+                }
+                break;
+                case "draw-triangulation": {
+                    if (args.length > 1) {
+                        World world = LoadWorld.loadWorld(args[1]);
+                        int numPoints = 5;
+                        // numPoints ?
+                        if (args.length > 2) {
+                            numPoints = intFromString(args[2]);
+                        }
+                        benchmarkTriangulation.benchmark(world, numPoints);
+                        DrawTriangulation.drawTriangulation(world);
                     }
                 }
                 break;
@@ -128,6 +143,10 @@ public class MainWindow {
                 break;
                 case "benchmark-generate3d": {
                     Benchmark3D.benchmarkGenerate3D();
+                }
+                break;
+                case "benchmark-run3d": {
+                    Benchmark3D.benchmarkAll();
                 }
                 break;
                 case "draw-astar3d": {
@@ -242,8 +261,8 @@ public class MainWindow {
             center.x(Math.round(o.x));
             center.y(Math.round(o.y));
             center.z(Math.round(o.z));
-            //DrawSphereWires(center, o.radius, 3, 4, BLACK);
-            DrawSphere(center, o.radius, ORANGE);
+            DrawSphereWires(center, o.radius, 3, 4, BLACK); 
+            //DrawSphere(center, o.radius, ORANGE);
        }
     }
 
@@ -301,5 +320,17 @@ public class MainWindow {
             System.out.println("drawPath3d: currentx = " + current.x + " y=" + current.y + " z=" + current.z);
             System.out.println("current = startreg = " + current.egaleA(world.startReg));
         }
+    }
+
+    private static int intFromString(String s) {
+        System.out.println("intFromString: " + s);
+        int value = 0;
+        for (char c : s.toCharArray()) {
+            if (c >= '0' && c <= '9') {
+                value *= 10;
+                value += c - '0';
+            }
+        }
+        return value;
     }
 }

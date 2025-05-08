@@ -1,5 +1,6 @@
 package org.example.world3D;
 
+import java.time.Instant;
 import java.util.Random;
 
 public class RandomWorld3D {
@@ -7,7 +8,7 @@ public class RandomWorld3D {
     public static World3D randomWorld3D(int w, int h, int d, int nbObstacles, int obstacleRadius,
         int tailleRegion) {
             // Generate start
-            Random rng = new Random(88);
+            Random rng = new Random(Instant.now().toEpochMilli());
             int startx = 0;
             int starty = rng.nextInt(h);
             int startz = rng.nextInt(d);

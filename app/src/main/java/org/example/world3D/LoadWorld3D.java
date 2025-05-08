@@ -50,7 +50,7 @@ public class LoadWorld3D {
                         int obstaclex = str_to_int(fields_and_values[1].strip());
                         int obstacley = str_to_int(fields_and_values[2].strip());
                         int obstaclez = str_to_int(fields_and_values[3].strip());
-                        int obstacleradius = str_to_int(fields_and_values[3].strip());
+                        int obstacleradius = str_to_int(fields_and_values[4].strip());
                         obstacles.add(new World3D.Obstacle3D(obstaclex, obstacley, obstaclez, obstacleradius));
                         break;
                     default:
@@ -64,7 +64,7 @@ public class LoadWorld3D {
             return world;     
         }
         catch (Exception e) {
-            System.err.println("SaveWorld.loadWorld: could not load the world " + e.getMessage());
+            System.err.println("LoadWorld3D.loadWorld: could not load the world " + e.getMessage());
         }
         return null;
         
